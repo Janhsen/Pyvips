@@ -1,2 +1,5 @@
+image:
+  file: Dockerfile
 tasks:
-  - init: pip3 install conda && conda install --channel conda-forge pyvips
+- command: pyenv global 3.7.7 &&
+           chmod +x envconfig.sh 
