@@ -1,2 +1,3 @@
 tasks:
-  - init: pip3 install conda && conda install --channel conda-forge pyvips
+  - init: pip3 install conda # && conda install --channel conda-forge pyvips
+
