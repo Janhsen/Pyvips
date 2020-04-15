@@ -1,11 +1,4 @@
-FROM gitpod/workspace-full
-                    
-USER gitpod
-
-
-
-
-###############PYVIPS##############
+FROM alpine:latest
 
 RUN sudo apk update && apk upgrade
 # basic packages libvips likes
