@@ -1,35 +1,56 @@
-FROM gitpod/workspace-full:latest
+FROM alpine:latest
 
-USER root
+ARG VIPS_VERSION=8.7.1
+ARG VIPS_URL=https://github.com/libvips/libvips/releases/download
 
-# Install util tools.
-RUN apt-get install -y \
-  apt-utils \
-  sudo \
-  git \
-  less \
-  wget
+RUN apk update && apk upgrade
 
-RUN mkdir -p /workspace/data \
-    && chown -R gitpod:gitpod /workspace/data
-  
-RUN mkdir /home/gitpod/.conda
+# basic packages libvips likes
+RUN apk add \
+	build-base \
+	autoconf \
+	automake \
+	libtool \
+	bc \
+	zlib-dev \
+	expat-dev \
+	jpeg-dev \
+	tiff-dev \
+	glib-dev \
+	libjpeg-turbo-dev \
+	libexif-dev \
+	lcms2-dev \
+	fftw-dev \
+	giflib-dev \
+	libpng-dev \
+	libwebp-dev \
+	orc-dev \
+	libgsf-dev 
 
-# Install conda
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
-    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
-    rm ~/miniconda.sh && \
-    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate base" >> ~/.bashrc
-    
-RUN chown -R gitpod:gitpod /opt/conda \
-    && chmod -R 777 /opt/conda \
-    && chown -R gitpod:gitpod /home/gitpod/.conda \
-    && chmod -R 777 /home/gitpod/.conda
+# add these if you like for text rendering, PDF rendering, SVG rendering, 
+# but they will pull in loads of other stuff
+RUN apk add \
+	gdk-pixbuf-dev \
+	poppler-dev \
+	librsvg-dev 
 
-# Give back control
-USER root
+# there are other optional deps you can add for openslide / openexr /
+# imagmagick support / Matlab support etc etc
 
+RUN wget -O- ${VIPS_URL}/v${VIPS_VERSION}/vips-${VIPS_VERSION}.tar.gz | tar xzC /tmp
+RUN cd /tmp/vips-${VIPS_VERSION} \
+	&& ./configure --prefix=/usr --disable-static --disable-debug \
+	&& make V=0 \
+	&& make install 
+
+RUN apk add \
+	python3-dev \
+	py3-pip
+
+# and now pyvips can go on
+RUN pip3 install --upgrade pip \
+  && pip3 install pyvips
+
+WORKDIR /data
 # Cleaning
 RUN apt-get clean
