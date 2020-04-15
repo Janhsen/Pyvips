@@ -6,10 +6,10 @@ echo Initializing...
 mkdir -p /workspace/conda
 mkdir -p /workspace/data
 
-#Create a new env called arcw
-conda create --prefix /workspace/conda/arcw python=3.6 &&
-echo "conda activate /workspace/conda/arcw" >> ~/.bashrc &&
-export PATH=/workspace/conda/arcw/bin:$PATH &&
+#Create a new env called pyvips
+conda create --prefix /workspace/conda/pyvips python=3.7.6 &&
+echo "conda activate /workspace/conda/pyvips" >> ~/.bashrc &&
+export PATH=/workspace/conda/pyvips/bin:$PATH &&
 source ~/.bashrc
 export SHELL=/bin/bash
 
