@@ -13,7 +13,7 @@ export PATH=/workspace/conda/arcw/bin:$PATH &&
 source ~/.bashrc
 export SHELL=/bin/bash
 
-#Install conda packages for to run jupyterlab
+#Install conda packages for to run pyvips
 conda install -c conda-forge pyvips
 
 echo Done...
