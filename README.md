@@ -19,8 +19,3 @@ docker run --rm -t -v $PWD:/data pyvips \
 		./wobble.py test.jpg x.jpg
 ```
 
-
-```
-docker run --rm -t -v $PWD:/data pyvips \
-		./soak.py test.jpg x.tif
-```
