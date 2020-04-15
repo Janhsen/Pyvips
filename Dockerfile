@@ -4,6 +4,6 @@ RUN apt-get update \
 	&& apt-get upgrade -y \
 	&& apt-get install -y libvips-dev 
 
-RUN pip install pyvips
+RUN pip3 install pyvips
 
 WORKDIR /data
