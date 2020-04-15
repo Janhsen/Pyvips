@@ -3,10 +3,9 @@ FROM gitpod/workspace-full:latest
 USER root
 
 # Install util tools.
-RUN sudo apt-get update \
-  apt-get install -y \
+RUN apt-get install -y \
   apt-utils \
-  #sudo \
+  sudo \
   git \
   less \
   wget
@@ -15,6 +14,7 @@ RUN mkdir -p /workspace/data \
     && chown -R gitpod:gitpod /workspace/data
   
 RUN mkdir /home/gitpod/.conda
+
 # Install conda
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
@@ -27,9 +27,6 @@ RUN chown -R gitpod:gitpod /opt/conda \
     && chmod -R 777 /opt/conda \
     && chown -R gitpod:gitpod /home/gitpod/.conda \
     && chmod -R 777 /home/gitpod/.conda
-
-#Install conda packages for to run pyvips
-RUN conda install -y -c conda-forge pyvips
 
 # Give back control
 USER root
