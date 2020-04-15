@@ -1,6 +1,7 @@
 FROM gitpod/workspace-full:latest
 
 USER root
+
 # Install util tools.
 RUN sudo apt-get update \
   apt-get install -y \
@@ -27,14 +28,11 @@ RUN chown -R gitpod:gitpod /opt/conda \
     && chown -R gitpod:gitpod /home/gitpod/.conda \
     && chmod -R 777 /home/gitpod/.conda
 
+#Install conda packages for to run pyvips
+RUN conda install -y -c conda-forge pyvips
 
 # Give back control
 USER root
 
 # Cleaning
 RUN apt-get clean
-
-
-
-#Install conda packages for to run pyvips
-#RUN conda install -y -c conda-forge pyvips
