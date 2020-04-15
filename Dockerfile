@@ -53,4 +53,4 @@ RUN pip3 install --upgrade pip \
 
 WORKDIR /data
 # Cleaning
-RUN apt-get clean
+#RUN apt-get clean
