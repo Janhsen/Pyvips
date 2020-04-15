@@ -2,8 +2,8 @@ FROM gitpod/workspace-full:latest
 
 USER root
 # Install util tools.
-RUN apt-get update \
- && apt-get install -y \
+#RUN apt-get update \
+ RUN apt-get install -y \
   apt-utils \
   sudo \
   git \
