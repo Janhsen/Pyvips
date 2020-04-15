@@ -8,7 +8,7 @@
 ### Rebuild the image
 
 ```
-docker pull python3:latest
+docker pull python:3
 docker build -t pyvips 
 ```
 
