@@ -1,4 +1,4 @@
-FROM python:3
+FROM gitpod/workspace-full
 
 RUN apt-get update \
 	&& apt-get upgrade -y \
