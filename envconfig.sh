@@ -14,8 +14,6 @@ source ~/.bashrc
 export SHELL=/bin/bash
 
 #Install conda packages for to run jupyterlab
-conda install -y -c conda-forge jupyterlab
+conda install -c conda-forge pyvips
 
-#Notes
-#To run jupyter lab : jupyter lab --ip=0.0.0.0 --allow-root
 echo Done...
