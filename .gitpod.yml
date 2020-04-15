@@ -1,5 +1,2 @@
 image:
-  file: Dockerfile
-tasks:
-- command: pyenv global 3.7.7 &&
-           chmod +x envconfig.sh 
+  file: .gitpod.Dockerfile
