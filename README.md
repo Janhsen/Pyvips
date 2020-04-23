@@ -8,7 +8,7 @@
 ### Rebuild the image
 
 ```
-docker pull python:3
+docker pull docker.pkg.github.com/janhsen/pyvips/pyvips:latest
 docker build -t pyvips 
 ```
 
