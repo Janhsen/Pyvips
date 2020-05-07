@@ -4,13 +4,13 @@ image:
 ports:
 - port: 9000
   onOpen: ignore
-- port: 8086-8087
+- port: 4840-4841   #OPCA Port 4840
   onOpen: ignore
 
 tasks:
 - command: |
     clear
-    export DOCKER_HOST=tcp://localhost:8086
+    export DOCKER_HOST=tcp://localhost:4840
     echo "once the setup is done, try running $(tput setaf 2)docker ps"
     echo
 - command: |
@@ -23,13 +23,13 @@ tasks:
     echo
     echo "$(tput setaf 2)inlets client --remote=${remote/https/wss} \\"
     echo "$(tput setaf 2)  --token $(cat /tmp/inlets-token) \\"
-    echo "$(tput setaf 2)  --upstream=http://127.0.0.1:8086$(tput sgr0)"
+    echo "$(tput setaf 2)  --upstream=http://127.0.0.1:4840$(tput sgr0)"
     echo
     echo "on your local machine."
     echo
-    echo "In the example above, $(tput setaf 3)your localdaemon must listen on port 8086.$(tput sgr0)"
+    echo "In the example above, $(tput setaf 3)your localdaemon must listen on port 4840.$(tput sgr0)"
   openMode: split-right
 - command: |
     head -c 16 /dev/urandom | shasum | cut -d" " -f1 > /tmp/inlets-token
-    inlets server --control-port=9000 --port 8086 --token="$(cat /tmp/inlets-token)"
+    inlets server --control-port=9000 --port 4840 --token="$(cat /tmp/inlets-token)"
   openMode: split-bottom
