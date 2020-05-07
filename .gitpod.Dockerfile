@@ -8,11 +8,6 @@ RUN pip3 install pyvips opcua
 #inlets
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add 
 
-Run curl -LkO https://raw.githubusercontent.com/remoteit/installer/master/scripts/auto-install.sh
-Run chmod +x ./auto-install.sh
-Run ./auto-install.sh
-Run connectd_installer
-
 USER gitpod
 RUN brew install inlets
 
