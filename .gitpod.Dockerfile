@@ -12,7 +12,6 @@ Run curl -LkO https://raw.githubusercontent.com/remoteit/installer/master/script
 Run chmod +x ./auto-install.sh
 Run ./auto-install.sh
 
-USER gitpod
 RUN brew install inlets
 
 WORKDIR /data
