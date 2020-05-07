@@ -11,7 +11,5 @@ RUN curl https://i.jpillora.com/chisel! | bash
 
 USER gitpod
 RUN brew install inlets
-RUN brew install chisel
-
 
 WORKDIR /data
