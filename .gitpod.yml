@@ -2,7 +2,7 @@ image:
   file: .gitpod.Dockerfile
 
 ports:
-- port: 9000
+- port: 9000-9100
   onOpen: ignore
 - port: 8086-8087
   onOpen: ignore
@@ -28,8 +28,13 @@ tasks:
     echo "on your local machine."
     echo
     echo "In the example above, $(tput setaf 3)your localdaemon must listen on port 8086.$(tput sgr0)"
+
+    echo
+    echo "Chisel server is running on $(gp url 9100)."
   openMode: split-right
 - command: |
     head -c 16 /dev/urandom | shasum | cut -d" " -f1 > /tmp/inlets-token
     inlets server --control-port=9000 --port 8086 --token="$(cat /tmp/inlets-token)"
+    chisel server --port 9100
   openMode: split-bottom 
+
