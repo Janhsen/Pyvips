@@ -1,2 +1,35 @@
 image:
   file: .gitpod.Dockerfile
+
+ports:
+- port: 9000
+  onOpen: ignore
+- port: 8086-8087
+  onOpen: ignore
+
+tasks:
+- command: |
+    clear
+    export DOCKER_HOST=tcp://localhost:8086
+    echo "once the setup is done, try running $(tput setaf 2)docker ps"
+    echo
+- command: |
+    clear
+    gp await-port 9000 &&
+    remote=$(gp url 9000)
+    echo
+    echo "Inlets server is running on $(gp url 9000)."
+    echo "$(tput setaf 7)Connect your local daemon by running"
+    echo
+    echo "$(tput setaf 2)inlets client --remote=${remote/https/wss} \\"
+    echo "$(tput setaf 2)  --token $(cat /tmp/inlets-token) \\"
+    echo "$(tput setaf 2)  --upstream=http://127.0.0.1:8086$(tput sgr0)"
+    echo
+    echo "on your local machine."
+    echo
+    echo "In the example above, $(tput setaf 3)your localdaemon must listen on port 8086.$(tput sgr0)"
+  openMode: split-right
+- command: |
+    head -c 16 /dev/urandom | shasum | cut -d" " -f1 > /tmp/inlets-token
+    inlets server --control-port=9000 --port 8086 --token="$(cat /tmp/inlets-token)"
+  openMode: split-bottom 
