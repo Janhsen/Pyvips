@@ -2,9 +2,13 @@ image:
   file: .gitpod.Dockerfile
 
 ports:
-- port: 9000-9100
+- port: 9000
+  onOpen: ignore
+- port: 9100
   onOpen: ignore
 - port: 8086-8087
+  onOpen: ignore
+- port: 4840-4841
   onOpen: ignore
 
 tasks:
@@ -17,8 +21,11 @@ tasks:
     clear
     gp await-port 9000 &&
     remote=$(gp url 9000)
+    gp await-port 9100 &&
+    remote2=$(gp url 9100)
     echo
     echo "Inlets server is running on $(gp url 9000)."
+    echo "Chisel server is running on $(gp url 9100)."
     echo "$(tput setaf 7)Connect your local daemon by running"
     echo
     echo "$(tput setaf 2)inlets client --remote=${remote/https/wss} \\"
@@ -26,6 +33,8 @@ tasks:
     echo "$(tput setaf 2)  --upstream=http://127.0.0.1:8086$(tput sgr0)"
     echo
     echo "on your local machine."
+    
+    echo "$(tput setaf 2)chisel client --remote=${remote2/https/wss} \\"
     echo
     echo "In the example above, $(tput setaf 3)your localdaemon must listen on port 8086.$(tput sgr0)"
 
@@ -37,4 +46,3 @@ tasks:
     inlets server --control-port=9000 --port 8086 --token="$(cat /tmp/inlets-token)"
     chisel server --port 9100
   openMode: split-bottom 
-
