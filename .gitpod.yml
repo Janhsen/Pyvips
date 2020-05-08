@@ -42,7 +42,7 @@ tasks:
     echo "Chisel Example with port 4840 - OPCUA mapping"
     echo "Start Chisel server in gitpod with: $(tput setaf 2)chisel server --port 9100 --reverse$(tput sgr0)"
     echo "Chisel server is running on $(gp url 9100)."
-    echo "Start: chisel client on remote pc with e.g. port 4840 (OPCUA) and map to server port 4841 with cmd  $(tput setaf 2) client $(gp url 9100) R:4841:4840 $(tput sgr0)"  
+    echo "Start: chisel client on remote pc with e.g. port 4840 (OPCUA) and map to server port 4841 with cmd  $(tput setaf 2)chisel client $(gp url 9100) R:4841:4840 $(tput sgr0)"  
     echo "Start: chisel client on gitpod with cmd  $(tput setaf 2) chisel client $(gp url 9100) R:4840:4841 $(tput sgr0) "  
 
   openMode: split-right
