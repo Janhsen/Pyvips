@@ -1,7 +1,6 @@
 import sys
 sys.path.insert(0, "..")
 import logging
-import time
 
 try:
     from IPython import embed
@@ -16,31 +15,20 @@ except ImportError:
 
 from opcua import ua, uamethod, Server
 
-
-class SubHandler(object):
-
-    """
-    Subscription Handler. To receive events from server for a subscription
-    data_change and event methods are called directly from receiving thread.
-    Do not do expensive, slow or network operation there. Create another 
-    thread if you need to do such a thing
-    """
-
-    def datachange_notification(self, node, val, data):
-        print("Python: New data change event", node, val)
-
-    def event_notification(self, event):
-        print("Python: New event", event)
-
+# method to be exposed through server
+def func(parent, variant):
+    ret = False
+    if variant.Value % 2 == 0:
+        ret = True
+    return [ua.Variant(ret, ua.VariantType.Boolean)]
 
 # method to be exposed through server
 # uses a decorator to automatically convert to and from variants
+
 @uamethod
 def multiply(parent, x, y):
     print("multiply method call with parameters: ", x, y)
     return x * y
-
-
 
 if __name__ == "__main__":
     # optional: setup logging

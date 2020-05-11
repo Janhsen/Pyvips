@@ -1,19 +1,24 @@
 import sys
 sys.path.insert(0, "..")
 import logging
-
 try:
     from IPython import embed
 except ImportError:
     import code
-
     def embed():
         vars = globals()
         vars.update(locals())
         shell = code.InteractiveConsole(vars)
         shell.interact()
-
 from opcua import ua, uamethod, Server
+
+
+# method to be exposed through server
+def func(parent, variant):
+    ret = False
+    if variant.Value % 2 == 0:
+        ret = True
+    return [ua.Variant(ret, ua.VariantType.Boolean)]
 
 # method to be exposed through server
 def func(parent, variant):
@@ -47,11 +52,11 @@ if __name__ == "__main__":
     # now setup our server
     server = Server()
     #server.set_endpoint("opc.tcp://localhost:4840/freeopcua/server/")
-    server.set_endpoint("opc.tcp://0.0.0.0:4840/freeopcua/server/")
-    server.set_server_name("FreeOpcUa Example Server")
+    server.set_endpoint("opc.tcp://127.0.0.1:4840/freeopcua/server/")
+    server.set_server_name("Python Server")
 
     # setup our own namespace
-    uri = "http://examples.freeopcua.github.io"
+    uri = "http://ipa.fraunhofer.de"
     idx = server.register_namespace(uri)
 
     # get Objects node, this is where we should put our custom stuff
