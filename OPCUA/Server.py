@@ -32,6 +32,14 @@ class SubHandler(object):
     def event_notification(self, event):
         print("Python: New event", event)
 
+        
+# method to be exposed through server
+def func(parent, variant):
+    ret = False
+    if variant.Value % 2 == 0:
+        ret = True
+    return [ua.Variant(ret, ua.VariantType.Boolean)]
+
 
 # method to be exposed through server
 # uses a decorator to automatically convert to and from variants
