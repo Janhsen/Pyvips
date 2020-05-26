@@ -1,17 +1,22 @@
-import os
-import sys
-import random
 import argparse
+import os
 import pathlib
+import random
 import pyvips
-#from scipy import constants
-import quantities as pq
+import pint
 
-pixelx = 300 * pq.count
-xres = 900 * (pq.count / pq.inch)
-xres.units = (pq.count / pq.mm)
+#UnitRegistry for unit conversion
+ureg = pint.UnitRegistry()
 
-print(pixelx / xres)
+x= (3 * ureg.mm / 4 * ureg.s)
+print(x)
+
+pixelx = 300 * ureg.count
+# xres = 900 * (ureg.count / ureg.inch)
+# xres.units = (ureg.count / ureg.mm)
+# z= (pixelx / xres)
+# print(z.name)
+
 
 class Image2Print:
 
