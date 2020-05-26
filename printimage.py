@@ -7,15 +7,12 @@ import pint
 
 #UnitRegistry for unit conversion
 ureg = pint.UnitRegistry()
+pixelx = 900 * (ureg.count)
+xres = 300 * (ureg.count / ureg.inch)
+z= (pixelx / xres)
+z= z.to(ureg.mm)
 
-x= (3 * ureg.mm / 4 * ureg.s)
-print(x)
-
-pixelx = 300 * ureg.count
-# xres = 900 * (ureg.count / ureg.inch)
-# xres.units = (ureg.count / ureg.mm)
-# z= (pixelx / xres)
-# print(z.name)
+print(z)
 
 
 class Image2Print:
