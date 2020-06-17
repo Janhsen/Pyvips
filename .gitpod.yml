@@ -49,8 +49,5 @@ tasks:
 - command: |
     head -c 16 /dev/urandom | shasum | cut -d" " -f1 > /tmp/inlets-token
     inlets server --control-port=9000 --port 8086 --token="$(cat /tmp/inlets-token)"
-  
-  openMode: split-right
 - command: |
     chisel server --port 9100 --reverse
-  openMode: split-bottom 

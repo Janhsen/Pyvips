@@ -5,64 +5,49 @@ import random
 import pyvips
 import pint
 
-#UnitRegistry for unit conversion
-ureg = pint.UnitRegistry()
-pixelx = 900 * (ureg.count)
-xres = 300 * (ureg.count / ureg.inch)
-z= (pixelx / xres)
-z= z.to(ureg.mm)
-
-print(z)
-
+ureg = pint.UnitRegistry() 
 
 class Image2Print:
 
     def __init__(self):
-        self.imgloaded = False
-        self.loadedimgpath = ""
+                                                                    # UnitRegistry for unit conversion
+        self.loadedimgpath = ""                                     # Image path
+        self.sizex = 1                                              # Scaling factor x
+        self.sizey = 1                                              # Scaling factor y
+        self.rot = 0                                                # Degree angle [°] to rotate the image 
+        self.offsetx = 0 * (ureg.mm)                                # X-Offset of the image realtive to origin of the printbed (cartesian coordinates(left, bottom))
+        self.offsety = 0 * (ureg.mm)                                # Y-Offset of the image realtive to origin of the printbed (cartesian coordinates(left, bottom))
+        self.shrink = False                                         # Shrink the printing image to smallest size Y | N
+        self.bg = [255,255,255]                                     # Background colour -> Fraunhofer RGB [23,156,125]'
+        self.path_in = ""                                           # Image path of the input image
+        self.path_out = ""                                          # Image path of the output image
+        self.dpix = 360 * (ureg.count / ureg.inch)                  # DPI in x direction
+        self.dpiy = 360 * (ureg.count / ureg.inch)                  # DPI in y direction
+        self.dimx = 0 * (ureg.mm)                                   # dimension [mm] in x direction
+        self.dimy = 0 * (ureg.mm)                                   # dimension [mm] in y direction
 
-        self.dpimax = 1200
-        self.sizex = 1
-        self.sizey = 1
-        self.rot = 0
-        self.xoffset_mm = 0
-        self.yoffset_mm = 0
-        self.shrink = False 
-        self.bg = [255,255,255]  # Fraunhofer RGB [23,156,125]'
-        self.path_in = ""
-        self.path_out = ""
-        self.dpix = 0
-        self.dpiy = 0
-        self.dimx = 0
-        self.dimy = 0
-
-
-    # def calc_dots_per_printbed_direction(self, dim : float, or) -> int: 
-    #     """Dots per printbed direction"""
-    #     return round(dim * dpi_to_dpmm(self.) / 25.4)
-
-    # def calc_factors(self):
-    #     self.dpmmx = self.calc_dpmm(self.dpix)
-    #     self.dpmmy = self.calc_dpmm(self.dpiy)
-
-    #     self.printbedx = round(self.dimx * (self.dpix/25.4))
-    #     self.printbedy = round(self.dimy *(self.dpiy/25.4))
-    #     self.xoffset = int(self.xoffset_mm*(self.dpix/25.4))
-    #     self.yoffset = int(self.yoffset_mm*(self.dpiy/25.4))
-    #     if self.dpix >self.dpiy:
-    #         self.dpimax = self.dpix
-    #     else:
-    #         self.dpimax = self.dpiy
-    #     if (self.dpix/self.dpiy) > 1 :
-    #         self.shrinkx = 1
-    #         self.shrinky = self.dpix/self.dpiy
-    #     if (dpiy/dpix) > 1 :
-    #         self.shrinkx = dpiy/dpix
-    #         self.shrinky = 1
-    #     else:
-    #         self.shrinkx = 1
-    #         self.shrinky = 1
-    #     self.dpimaxmm = self.dpimax*(1/25.40)
+    def calc_factors(self): 
+        self.printbedx_px = self.dimx * self.dpix                           # Printbed pixel in x direction
+        self.printbedx_px = round(self.printbedx_px.to_reduced_units())
+        self.printbedy_px = self.dimy * self.dpiy                           # Printbed pixel in y direction
+        self.printbedy_px = round(self.printbedy_px.to_reduced_units())
+        self.offsetx_px = self.offsetx * self.dpix                          # Offset in pixel in x direction
+        self.offsetx_px = round(self.offsetx_px.to_reduced_units())
+        self.offsety_px = self.offsety * self.dpiy                          # Offset in pixel in y direction
+        self.offsety_px = round(self.offsety_px.to_reduced_units())
+        if self.dpix > self.dpiy:                                           # Max DPI of the created image
+           self.dpimax = self.dpix                          
+        else:
+            self.dpimax = self.dpiy                        
+        if (self.dpix/self.dpiy) > 1 :                                      # Shrinking factors
+            self.shrinkx = 1 * ureg.dimensionless
+            self.shrinky = self.dpix/self.dpiy
+        elif (self.dpiy/self.dpix) > 1 :
+            self.shrinkx = self.dpiy/self.dpix
+            self.shrinky = 1 * ureg.dimensionless
+        else:
+            self.shrinkx = 1 * ureg.dimensionless
+            self.shrinky = 1 * ureg.dimensionless
    
     def set_imagepath(self, path :str = './data/test.tiff'):
         """Set image path (*.tiff,*.tif,*.png, *.bmp, *.svg)"""
