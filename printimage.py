@@ -35,10 +35,14 @@ class Image2Print:
         self.offsetx_px = round(self.offsetx_px.to_reduced_units())
         self.offsety_px = self.offsety * self.dpiy                          # Offset in pixel in y direction
         self.offsety_px = round(self.offsety_px.to_reduced_units())
+        self.dpmmx = self.dpix.to(ureg.count / ureg.mm)
+        self.dpmmy = self.dpiy.to(ureg.count / ureg.mm)
         if self.dpix > self.dpiy:                                           # Max DPI of the created image
-           self.dpimax = self.dpix                          
+           self.dpimax = self.dpix  
+           self.dpmmmax = self.dpimax.to(ureg.count / ureg.mm)                       
         else:
-            self.dpimax = self.dpiy                        
+            self.dpimax = self.dpiy     
+            self.dpmmmax = self.dpimax.to(ureg.count / ureg.mm)                  
         if (self.dpix/self.dpiy) > 1 :                                      # Shrinking factors
             self.shrinkx = 1 * ureg.dimensionless
             self.shrinky = self.dpix/self.dpiy
@@ -54,29 +58,101 @@ class Image2Print:
         path = path.lower()
         if ((path.endswith('.tiff') or path.endswith('.tif') or path.endswith('.png') or path.endswith('.bmp') or path.endswith('.svg') ) and os.path.exists(path)) and os.path.isfile(path):
             self.path_in = path
-            print('Set image path: ', self.path_in)
+            print('\nSet image path: ', self.path_in)
             return True
         else:
             self.path_in = './data/test.tiff'
             if os.path.isfile(path) != True:
                     print('File not found')
             elif (path.endswith('.tiff') or path.endswith('.tif') or path.endswith('.png') or path.endswith('.bmp') != True) :
-                print('Wrong file ending')
+                print('\nWrong file ending')
             return False
 
-    # def load_svg(self):
-    #         """Load SVG"""
-    #         self.img = pyvips.Image.svgload(self.path, dpi = self.dpimax)
-    #         self.img = img.colourspace('b-w')
-    #         self.img = img.invert()
-    #         self.img = img.extract_band(1)
+    def load_svg(self):
+        if self.path_in != '' :
+                """Load SVG"""
+                print ('\nLoad SVG:', self.path_in),
+                self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax.magnitude)
+                self.img = self.img.colourspace('b-w')
+                self.img = self.img.invert()
+                self.img = self.img.extract_band(1)
+                print ('\nPixel width:', self.img.width, '\nPixel height:', self.img.height, '\nDPIx:', round(self.img.xres/(1/25.40),3), '\nDPIy:', round(self.img.yres/(1/25.40),3),'\n'), 
+                self.buffer = self.img.tiffsave_buffer(xres = self.dpmmy.magnitude, yres = self.dpmmy.magnitude)
+                self.img = pyvips.Image.tiffload_buffer(self.buffer)
+                return True
+        else:
+                print ('\nNo image loaded')
+                return False
 
-    #         self.imgloaded = True
-    #         self.loadedimgpath = self.set_imagepath
+    def load_bitmap(self):
+        if self.path_in != '' :
+            """Load Bitmap"""
+            self.img = pyvips.Image.new_from_file(self.path_in)
+            print ('\nLoad bitmap:', self.path_in),
+            self.img = pyvips.Image.new_from_file(self.path_in)
+            print ('\nwidth:', self.img.width, '\nheight:', self.img.height, '\nDPIx:', round(self.img.xres/(1/25.40),3), '\nDPIy:', round(self.img.yres/(1/25.40),3)), 
+            self.scalex = round((self.img.xres / self.dpmmmax.magnitude),7)
+            self.scaley = round((self.img.yres / self.dpmmmax.magnitude),7) 
+            print ('\nResize org. image x:', 1/self.scalex, 'y:', 1/self.scaley)
+            if self.scalex >= self.scaley :
+                self.img = self.img.resize((1/self.scalex),vscale = (1/(self.scaley)))
+            else:
+                self.img = self.img.resize((1/self.scalex),vscale = (self.scaley))
+            self.buffer = self.img.tiffsave_buffer(xres = self.dpmmx.magnitude, yres = self.dpmmy.magnitude)
+            self.img = pyvips.Image.tiffload_buffer(self.buffer)
+            return True
+        else:
+            print ('\nNo image loaded')
+            return False
 
-    #         print('Load SVG:', self.path)
+    def calc_image(self):  
+        self.img = self.img.colourspace('b-w')
+        self.printbed = self.img.extract_band(0)
+        self.scalex = round((self.img.xres/self.dpmmmax.magnitude),7)*self.sizex
+        self.scaley = round((self.img.yres/self.dpmmmax.magnitude),7)*self.sizey
+        print ('Rescale image for DPIx and DPIy x:', self.scalex, 'y:',self.scaley)
+        if self.scalex >= self.scaley :
+            self.img = self.img.resize(self.scalex,vscale = (self.scaley))
+        else:
+            self.img = self.img.resize(self.scalex,vscale = (1/(self.scaley)))
+        
+        print ('\nwidth_resize:', self.img.width, '\nheight_resize:', self.img.height, '\nDPIx_resize:', round(self.img.xres/(1/25.40),3), '\nDPIy_resize:', round(self.img.yres/(1/25.40),3)), 
+        print ('\nRotate', self.rot, '°') 
+        self.img = self.img.rotate(self.rot, background =self.bg )
+        
+        if self.shrink == True:
+            if (self.img.width + self.offsetx_px) < self.self.printbedx_px :
+                self.self.printbedx_px = (self.img.width + self.offsetx_px)
+            if (self.img.height + self.offsety_px) < self.self.printbedy_px :
+                self.self.printbedy_px = (self.img.height + self.offsety_px)  
 
-    # def load_bitmap(self):
-    #         """Load Bitmap"""
-    #         img = pyvips.Image.new_from_file(self.path)
-    #         print('Load Bitmap:', self.path)
+        print ('Create printbed bounding') 
+        self.printbed_px = pyvips.Image.black(self.printbedx_px, self.printbedy_px)
+        
+        self.printbed_px = self.printbed_px.ifthenelse([0,0,0],self.bg)
+        if self.bg == [255,255,255]:
+            self.printbed = self.printbed.colourspace('b-w')
+        print ('Merge images with pixel offset X=', self.offsetx_px,'and Y=', self.offsety_px)
+        self.offsety_px = self.printbedy_px - self.img.height - self.offsety.magnitude
+        self.printbed = self.printbed.insert(self.img, self.offsetx_px.magnitude, self.offsety_px.magnitude)
+        print ('Convert to B&W') 
+        #Create Printimage
+        print ('Print image:', self.path_out,  '\n\nwidth_print:', self.printbed.width, '\nheight_print:', self.printbed.height, '\nDPIx_print:', self.dpmmx.magnitude/(1/25.40), '\nDPIy_print:', self.dpmmy.magnitude/(1/25.40)), 
+        self.printbed.tiffsave(self.path_out, squash = True, xres = self.dpmmx.magnitude, yres = self.dpmmy.magnitude, compression = 'deflate')
+        print ('\n####     Done     ####\n'), 
+
+    def get_image_prop(self): 
+        self.img_width_px = self.img.width
+        self.img_height_px = self.img.height
+        self.img_dpmmx = self.img.xres
+        self.img_dpmmy = self.img.yres
+        self.img_width_mm = self.img.width/self.img.xres
+        self.img_height_mm = self.img.height/self.img.yres
+        self.img_dpix = self.img.xres/(1/25.40)
+        self.img_dpiy = self.img.yres/(1/25.40)
+        print('Image width in pixel', self.img_width_px)
+        print('Image height in pixel', self.img_height_px)
+        print('Image width in mm', self.img_width_mm)
+        print('Image height in mm', self.img_height_mm)
+        print('Image DPI in X direction', self.img_dpix)
+        print('Image DPI in > direction', self.img_dpiy)
