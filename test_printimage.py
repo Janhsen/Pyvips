@@ -4,7 +4,8 @@ import pint
 
 #VARS
 IMAGEPATH_EXISTING = "./data/Test.tiff"
-IMAGEPATH_EXISTING_SVG = "./data/test.svg"
+IMAGEPATH_EXISTING_SVG_1 = "./data/test_corel.svg"
+IMAGEPATH_EXISTING_SVG_2 = "./data/test_inkscape.svg"
 IMAGEPATH_SYNTAX = "./data/Test.TIFF"
 IMAGEPATH_WRONGENDING = "./data/x.jpg"
 IMAGEPATH_NOTEXISTING = "./data/Tester.jpg"
@@ -78,12 +79,16 @@ class TestPrintImage(unittest.TestCase):
         Image2Print.dimx = DIMX * (ureg.mm)                        # dimension [mm] in x direction
         Image2Print.dimy = DIMY * (ureg.mm)                        # dimension [mm] in y direction
 
-        Image2Print.set_imagepath(path = IMAGEPATH_EXISTING_SVG)
+        Image2Print.set_imagepath(path = IMAGEPATH_EXISTING_SVG_1)
         Image2Print.calc_factors()
         result = Image2Print.load_svg()
-        Image2Print.get_image_prop()
         self.assertEqual(result,True)
-        
+
+        Image2Print.set_imagepath(path = IMAGEPATH_EXISTING_SVG_2)
+        Image2Print.calc_factors()
+        result = Image2Print.load_svg()
+        self.assertEqual(result,True)
+
     def test_load_bitmap(self):
         Image2Print = printimage.Image2Print()
         ureg = pint.UnitRegistry()
@@ -101,8 +106,8 @@ class TestPrintImage(unittest.TestCase):
         result = Image2Print.load_bitmap()
         Image2Print.get_image_prop()
         self.assertEqual(result,True)
-        self.assertEqual(Image2Print.scalex,0.9, 1)
-        self.assertEqual(Image2Print.scaley,0.9, 1)
+        self.assertEqual(Image2Print.scalex,0.5, 1)
+        self.assertEqual(Image2Print.scaley,0.5, 1)
 
     def test_calc_image(self):
         Image2Print = printimage.Image2Print()
