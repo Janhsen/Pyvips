@@ -1,5 +1,5 @@
 import unittest
-import printimage
+import ImageProcessing
 import pint
 
 #VARS
@@ -22,10 +22,10 @@ OFFSETX = 25.4
 OFFSETY = 50.8
 
 
-class TestPrintImage(unittest.TestCase):
+class Image2Print(unittest.TestCase):
 
     def test_set_imagepath(self):
-        Image2Print = printimage.Image2Print()
+        Image2Print = ImageProcessing.Image2Print()
         result = Image2Print.set_imagepath(IMAGEPATH_EXISTING)
         self.assertEqual(result,True)
         result = Image2Print.set_imagepath(IMAGEPATH_SYNTAX)
@@ -36,7 +36,7 @@ class TestPrintImage(unittest.TestCase):
         self.assertEqual(result,False)
 
     def test_calc_factors(self):
-        Image2Print = printimage.Image2Print()
+        Image2Print = ImageProcessing.Image2Print()
         #VARS
         ureg = pint.UnitRegistry()
         Image2Print.sizex = 1                                      # Scaling factor x
@@ -68,7 +68,7 @@ class TestPrintImage(unittest.TestCase):
         self.assertEqual(Image2Print.dpimax , 300 * (ureg.count / ureg.inch))
 
     def test_load_svg(self):
-        Image2Print = printimage.Image2Print()
+        Image2Print = ImageProcessing.Image2Print()
         ureg = pint.UnitRegistry()
         Image2Print.sizex = 1                                      # Scaling factor x
         Image2Print.sizey = 1                                      # Scaling factor y 
@@ -90,7 +90,7 @@ class TestPrintImage(unittest.TestCase):
         self.assertEqual(result,True)
 
     def test_load_bitmap(self):
-        Image2Print = printimage.Image2Print()
+        Image2Print = ImageProcessing.Image2Print()
         ureg = pint.UnitRegistry()
         Image2Print.sizex = 1                                      # Scaling factor x
         Image2Print.sizey = 1                                      # Scaling factor y 
@@ -110,7 +110,7 @@ class TestPrintImage(unittest.TestCase):
         self.assertEqual(Image2Print.scaley,0.5, 1)
 
     def test_calc_image(self):
-        Image2Print = printimage.Image2Print()
+        Image2Print = ImageProcessing.Image2Print()
         ureg = pint.UnitRegistry()
         Image2Print.sizex = 1                                      # Scaling factor x
         Image2Print.sizey = 1                                      # Scaling factor y 
