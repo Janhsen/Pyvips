@@ -27,6 +27,8 @@ class Image2Print:
         self.dimy = 0 * (ureg.mm)                                   # dimension [mm] in y direction
 
     def calc_factors(self): 
+        """Calculate image factors
+        """        
         self.printbedx_px = self.dimx * self.dpix                           # Printbed pixel in x direction
         self.printbedx_px = round(self.printbedx_px.to_reduced_units())
         self.printbedy_px = self.dimy * self.dpiy                           # Printbed pixel in y direction
@@ -69,6 +71,11 @@ class Image2Print:
             return False
 
     def load_svg(self):
+        """Loads SVG with DPImax resoultion
+
+        Returns:
+            [BOOL]: [True if sucessfull | False if no SVG loaded]
+        """        
         if self.path_in != '' :
                 """Load SVG"""
                 print ('\nLoad SVG:', self.path_in),
@@ -79,15 +86,18 @@ class Image2Print:
                 print ('\nPixel width:', self.img.width, '\nPixel height:', self.img.height, '\nDPIx:', round(self.img.xres/(1/25.40),3), '\nDPIy:', round(self.img.yres/(1/25.40),3),'\n'), 
                 self.buffer = self.img.tiffsave_buffer(xres = self.dpmmy.magnitude, yres = self.dpmmy.magnitude)
                 self.img = pyvips.Image.tiffload_buffer(self.buffer)
-                
                 return True
         else:
                 print ('\nNo image loaded')
                 return False
 
     def load_bitmap(self):
+        """Loads Bitmaps *.tiff,*.tif,*.png, *.bmp with spec. DPImax resolution
+
+        Returns:
+            [BOOL]: [True if sucessfull | False if no bitmap loaded]
+        """        
         if self.path_in != '' :
-            """Load Bitmap"""
             self.img = pyvips.Image.new_from_file(self.path_in)
             print ('\nLoad bitmap:', self.path_in),
             self.img = pyvips.Image.new_from_file(self.path_in)
@@ -107,6 +117,8 @@ class Image2Print:
             return False
 
     def calc_image(self):  
+        """[summary]
+        """        
         self.img = self.img.colourspace('b-w')
         self.printbed = self.img.extract_band(0)
         self.scalex = round((self.img.xres/self.dpmmmax.magnitude),7)*self.sizex
@@ -143,6 +155,8 @@ class Image2Print:
         print ('\n####     Done     ####\n'), 
 
     def get_image_prop(self): 
+        """Get all image properties 
+        """        
         self.img_width_px = self.img.width
         self.img_height_px = self.img.height
         self.img_dpmmx = self.img.xres
@@ -151,9 +165,22 @@ class Image2Print:
         self.img_height_mm = self.img.height/self.img.yres
         self.img_dpix = self.img.xres/(1/25.40)
         self.img_dpiy = self.img.yres/(1/25.40)
-        print('Image width in pixel', self.img_width_px)
-        print('Image height in pixel', self.img_height_px)
-        print('Image width in mm', self.img_width_mm)
-        print('Image height in mm', self.img_height_mm)
-        print('Image DPI in X direction', self.img_dpix)
-        print('Image DPI in > direction', self.img_dpiy)
+        self.img_prop = {
+                        'width_px' : self.img_width_px,
+                        'height_px' : self.img_height_px,
+                        'dpmmx' : self.img_dpmmx,
+                        'dpmmy' : self.img_dpmmy,
+                        'width_mm' : self.img_width_mm,
+                        'height_mm' : self.img_height_mm,
+                        'DPIx' : self.img_dpix,
+                        'DPIy' : self.img_dpiy
+                                                }
+        #print('Image width in pixel', self.img_width_px)
+        #print('Image height in pixel', self.img_height_px)
+        #print('Image width in mm', self.img_width_mm)
+        #print('Image height in mm', self.img_height_mm)
+        #print('Image DPI in X direction', self.img_dpix)
+        #print('Image DPI in > direction', self.img_dpiy)
+        return self.img_prop
+
+        
