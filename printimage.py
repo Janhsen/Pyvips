@@ -79,6 +79,7 @@ class Image2Print:
                 print ('\nPixel width:', self.img.width, '\nPixel height:', self.img.height, '\nDPIx:', round(self.img.xres/(1/25.40),3), '\nDPIy:', round(self.img.yres/(1/25.40),3),'\n'), 
                 self.buffer = self.img.tiffsave_buffer(xres = self.dpmmy.magnitude, yres = self.dpmmy.magnitude)
                 self.img = pyvips.Image.tiffload_buffer(self.buffer)
+                
                 return True
         else:
                 print ('\nNo image loaded')
