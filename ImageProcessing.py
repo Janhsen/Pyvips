@@ -9,24 +9,7 @@ ureg = pint.UnitRegistry()
 
 class Image2Print:
 
-    def __init__(self):
-                                                                    # UnitRegistry for unit conversion
-        self.loadedimgpath = ""                                     # Image path
-        self.sizex = 1                                              # Scaling factor x
-        self.sizey = 1                                              # Scaling factor y
-        self.rot = 0                                                # Degree angle [°] to rotate the image 
-        self.offsetx = 0 * (ureg.mm)                                # X-Offset of the image realtive to origin of the printbed (cartesian coordinates(left, bottom))
-        self.offsety = 0 * (ureg.mm)                                # Y-Offset of the image realtive to origin of the printbed (cartesian coordinates(left, bottom))
-        self.shrink = False                                         # Shrink the printing image to smallest size Y | N
-        self.bg = [255,255,255]                                     # Background colour -> Fraunhofer RGB [23,156,125]'
-        self.path_in = ""                                           # Image path of the input image
-        self.path_out = ""                                          # Image path of the output image
-        self.dpix = 360 * (ureg.count / ureg.inch)                  # DPI in x direction
-        self.dpiy = 360 * (ureg.count / ureg.inch)                  # DPI in y direction
-        self.dimx = 0 * (ureg.mm)                                   # dimension [mm] in x direction
-        self.dimy = 0 * (ureg.mm)                                   # dimension [mm] in y direction
-
-    def calc_factors(self): 
+    def __calc_factors(self): 
         """Calculate image factors
         """        
         self.printbedx_px = self.dimx * self.dpix                           # Printbed pixel in x direction
@@ -55,7 +38,7 @@ class Image2Print:
             self.shrinkx = 1 * ureg.dimensionless
             self.shrinky = 1 * ureg.dimensionless
    
-    def set_imagepath(self, path :str = './data/test.tiff'):
+    def __set_imagepath(self, path :str = './data/test.tiff'):
         """Set image path (*.tiff,*.tif,*.png, *.bmp, *.svg)"""
         path = path.lower()
         if ((path.endswith('.tiff') or path.endswith('.tif') or path.endswith('.png') or path.endswith('.bmp') or path.endswith('.svg') ) and os.path.exists(path)) and os.path.isfile(path):
@@ -70,7 +53,22 @@ class Image2Print:
                 print('\nWrong file ending')
             return False
 
-    def load_svg(self):
+    def __set_savepath(self, path :str = './data/result.tiff'):
+        """Set save path (*.tiff,*.tif)"""
+        path = path.lower()
+        if ((path.endswith('.tiff') or path.endswith('.tif')) and os.path.exists(path)) and os.path.isfile(path):
+            self.path_out = path
+            print('\nSet save path: ', self.path_out)
+            return True
+        else:
+            self.path_out = './data/result.tiff'
+            if os.path.isfile(path) != True:
+                    print('Output file wrong new path: ', self.path_out)
+            elif (path.endswith('.tiff') or path.endswith('.tif') != True) :
+                print('\nWrong file ending')
+            return False
+
+    def __load_svg(self):
         """Loads SVG with DPImax resoultion
 
         Returns:
@@ -91,7 +89,7 @@ class Image2Print:
                 print ('\nNo image loaded')
                 return False
 
-    def load_bitmap(self):
+    def __load_bitmap(self):
         """Loads Bitmaps *.tiff,*.tif,*.png, *.bmp with spec. DPImax resolution
 
         Returns:
@@ -116,9 +114,7 @@ class Image2Print:
             print ('\nNo image loaded')
             return False
 
-    def calc_image(self):  
-        """[summary]
-        """        
+    def __calc_image(self):       
         self.img = self.img.colourspace('b-w')
         self.printbed = self.img.extract_band(0)
         self.scalex = round((self.img.xres/self.dpmmmax.magnitude),7)*self.sizex
@@ -134,9 +130,9 @@ class Image2Print:
         self.img = self.img.rotate(self.rot, background =self.bg )
         
         if self.shrink == True:
-            if (self.img.width + self.offsetx_px) < self.self.printbedx_px :
+            if (self.img.width + self.offsetx_px) < self.printbedx_px :
                 self.self.printbedx_px = (self.img.width + self.offsetx_px)
-            if (self.img.height + self.offsety_px) < self.self.printbedy_px :
+            if (self.img.height + self.offsety_px) < self.printbedy_px :
                 self.self.printbedy_px = (self.img.height + self.offsety_px)  
 
         print ('Create printbed bounding') 
@@ -154,7 +150,7 @@ class Image2Print:
         self.printbed.tiffsave(self.path_out, squash = True, xres = self.dpmmx.magnitude, yres = self.dpmmy.magnitude, compression = 'deflate')
         print ('\n####     Done     ####\n'), 
 
-    def get_image_prop(self): 
+    def __get_image_prop(self): 
         """Get all image properties 
         """        
         self.img_width_px = self.img.width
@@ -175,12 +171,117 @@ class Image2Print:
                         'DPIx' : self.img_dpix,
                         'DPIy' : self.img_dpiy
                                                 }
-        #print('Image width in pixel', self.img_width_px)
-        #print('Image height in pixel', self.img_height_px)
-        #print('Image width in mm', self.img_width_mm)
-        #print('Image height in mm', self.img_height_mm)
-        #print('Image DPI in X direction', self.img_dpix)
-        #print('Image DPI in > direction', self.img_dpiy)
+        print('Image width in pixel', self.img_width_px)
+        print('Image height in pixel', self.img_height_px)
+        print('Image width in mm', self.img_width_mm)
+        print('Image height in mm', self.img_height_mm)
+        print('Image DPI in X direction', self.img_dpix)
+        print('Image DPI in Y direction', self.img_dpiy)
         return self.img_prop
 
-        
+    def __set_printsettings(  self, 
+                            dpix : int , 
+                            dpiy : int, 
+                            dimx: float, 
+                            dimy: float, 
+                            sizex : float = 1, 
+                            sizey : float = 1, 
+                            rot : float = 0, 
+                            offsetx : float = 0,
+                            offsety :float = 0, 
+                            shrink: bool = True, 
+                            bg : list = [255,255,255] 
+                            ):
+           
+        """Set all properties for the new calculated image
+
+        Args:
+            dpix (int): [DPI in x direction]
+            dpiy (int): [DPI in y direction]
+            dimx (float): [Dimension [mm] in x direction]
+            dimy (float): [Dimension [mm] in y direction]
+            sizex (float, optional): [Scaling factor x]. Defaults to 1.
+            sizey (float, optional): [Scaling factor y]. Defaults to 1.
+            rot (float, optional): [Degree angle [°] to rotate the image]. Defaults to 0.
+            offsetx (float, optional): [X-Offset of the image realtive to origin of the printbed (cartesian coordinates(left, bottom))]. Defaults to 0.
+            offsety (float, optional): [Y-Offset of the image realtive to origin of the printbed (cartesian coordinates(left, bottom))]. Defaults to 0.
+            shrink (bool, optional): [Shrink the printing image to smallest size Y | N]. Defaults to True.
+            bg (list, optional): [Background colour -> Fraunhofer RGB [23,156,125]']. Defaults to [255,255,255].
+        """        
+
+        self.dpix = dpix * (ureg.count / ureg.inch)                
+        self.dpiy = dpiy * (ureg.count / ureg.inch)                  
+        self.dimx = dimx * (ureg.mm)                               
+        self.dimy = dimy * (ureg.mm)                      
+        self.sizex = sizex                                              
+        self.sizey = sizey                                             
+        self.rot = rot                                               
+        self.offsetx = offsetx * (ureg.mm)                               
+        self.offsety = offsety * (ureg.mm)                                
+        self.shrink = shrink                             
+        self.bg = bg 
+
+    def calculate_printimage(self,
+                        dpix : int , 
+                        dpiy : int, 
+                        dimx: float, 
+                        dimy: float, 
+                        path_in : str,
+                        path_out : str,
+                        sizex : float = 1, 
+                        sizey : float = 1, 
+                        rot : float = 0, 
+                        offsetx : float = 0,
+                        offsety :float = 0, 
+                        shrink: bool = True, 
+                        bg : list = [255,255,255] 
+                        ):                                 
+        """Calculates a 1bit printimage bg = [255,255,255] or a printimage with a give printbed (bg color)
+
+            Args:
+                dpix (int): [DPI in x direction]
+                dpiy (int): [DPI in y direction]
+                dimx (float): [Dimension [mm] in x direction]
+                dimy (float): [Dimension [mm] in y direction]
+                path_in (str): [Image path (*.tiff,*.tif,*.png, *.bmp, *.svg)]
+                path_out (str): [Save path (*.tiff,*.tif)]
+                sizex (float, optional): [Scaling factor x]. Defaults to 1.
+                sizey (float, optional): [Scaling factor y]. Defaults to 1.
+                rot (float, optional): [Degree angle [°] to rotate the image]. Defaults to 0.
+                offsetx (float, optional): [X-Offset of the image realtive to origin of the printbed (cartesian coordinates(left, bottom))]. Defaults to 0.
+                offsety (float, optional): [Y-Offset of the image realtive to origin of the printbed (cartesian coordinates(left, bottom))]. Defaults to 0.
+                shrink (bool, optional): [Shrink the printing image to smallest size Y | N]. Defaults to True.
+                bg (list, optional): [Background colour -> Fraunhofer RGB [23,156,125]']. Defaults to [255,255,255].
+        """  
+        self.__set_printsettings(dpix, dpiy, dimx, dimy, sizex , sizey , rot, offsetx , offsety, shrink, bg)
+        self.__set_imagepath(path_in)
+        self.__set_savepath(path_out)
+        self.__calc_factors()
+        if self.path_in.endswith('.svg'):
+            self.__load_svg()
+        elif self.path_in.endswith('.tif') or self.path_in.endswith('.tiff') or self.path_in.endswith('.png') or self.path_in.endswith('.bmp') :
+            self.__load_bitmap()
+        else:
+            return
+        img_prop = self.__get_image_prop()
+        self.__calc_image()
+        return (img_prop)
+
+    def get_image_prop(self, path : str, dpimax: int = 100 ):
+        """Get image properties of a given image
+
+        Args:
+            path ([str]): [Image path (*.tiff,*.tif,*.png, *.bmp, *.svg)]]
+            dpimax ([int]) : [If SVG]
+        Returns:
+            img_prop: [{width_px, height_px, dpmmx, dpmmy, width_mm, height_mm, DPIx, DPIy}]
+        """    
+        self.dpimax = dpimax
+        self.__set_imagepath(path)
+        if self.path_in.endswith('.svg'):
+            self.__load_svg()
+        elif self.path_in.endswith('.tif') or self.path_in.endswith('.tiff') or self.path_in.endswith('.png') or self.path_in.endswith('.bmp') :
+            self.__load_bitmap()
+        else:
+            return
+        return self.__get_image_prop()

@@ -6,7 +6,7 @@ import argparse
 import pyvips
 
 #Phrasing of inputs 
-#Example:  Img2Print.py --path_in='test.tiff' --path_out 'x.tiff' --dpix 100 --dpiy 100 --dimx 30 --dimy 30 --bg 255 255 255 --rot 45  --offx 10 --offy 0
+#Example:  Img2Print.py --path_in='./data/test.tiff' --path_out './data/result.tiff' --dpix 100 --dpiy 100 --dimx 1000 --dimy 1000 --bg 255 255 255 --rot 45  --offx 10 --offy 10
 
 parser = argparse.ArgumentParser(description='Process SVGs and Bitmaps for printing')
 parser.add_argument("--path_in", required=True, type = str,
