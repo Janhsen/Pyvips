@@ -98,10 +98,10 @@ class Image2Print:
         if self.path_in != '' :
             self.img = pyvips.Image.new_from_file(self.path_in)
             print ('\nLoad bitmap:', self.path_in),
-            self.img = pyvips.Image.new_from_file(self.path_in)
+            #self.img = pyvips.Image.new_from_file(self.path_in)
             print ('\nwidth:', self.img.width, '\nheight:', self.img.height, '\nDPIx:', round(self.img.xres/(1/25.40),3), '\nDPIy:', round(self.img.yres/(1/25.40),3)), 
             self.scalex = round((self.img.xres / self.dpmmmax.magnitude),7)
-            self.scaley = round((self.img.yres / self.dpmmmax.magnitude),7) 
+            self.scaley = round((self.img.yres / self.dpmmmax.magnitude),7)
             print ('\nResize org. image x:', 1/self.scalex, 'y:', 1/self.scaley)
             if self.scalex >= self.scaley :
                 self.img = self.img.resize((1/self.scalex),vscale = (1/(self.scaley)))
