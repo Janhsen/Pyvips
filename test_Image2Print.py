@@ -10,21 +10,21 @@ IMAGEPATH_SYNTAX = "./data/Test.TIFF"
 IMAGEPATH_WRONGENDING = "./data/x.jpg"
 IMAGEPATH_NOTEXISTING = "./data/Tester.jpg"
 IMAGEPATH_SAVE = "./data/result.tiff"
-DPIX_1 = 100
-DPIY_1 = 200
+DPIX_1 = 300
+DPIY_1 = 300
 DPIX_2 = 100
 DPIY_2 = 100
 DPIX_3 = 300
 DPIY_3 = 100
-DIMX = 125.4
-DIMY = 150.8
-OFFSETX = 0
-OFFSETY = 0
+DIMX = 300
+DIMY = 300
+OFFSETX = 100
+OFFSETY = 100
 ROT = 0
-SHRINK = True
-BG =  [240, 240, 240]
-SIZEX = 1
-SIZEY = 1
+SHRINK = False
+BG =  [255, 255, 255]
+SIZEX = 0.1
+SIZEY = 0.1
 class Image2Print(unittest.TestCase):
 
     def test1_calculate_printimage(self):
