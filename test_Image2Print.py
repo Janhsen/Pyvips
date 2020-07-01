@@ -10,40 +10,42 @@ IMAGEPATH_SYNTAX = "./data/Test.TIFF"
 IMAGEPATH_WRONGENDING = "./data/x.jpg"
 IMAGEPATH_NOTEXISTING = "./data/Tester.jpg"
 IMAGEPATH_SAVE = "./data/result.tiff"
-DPIX_1 = 300
-DPIY_1 = 300
+DPIX_1 = 100
+DPIY_1 = 100
 DPIX_2 = 100
 DPIY_2 = 100
 DPIX_3 = 300
 DPIY_3 = 100
-DIMX = 300
-DIMY = 300
-OFFSETX = 100
-OFFSETY = 100
-ROT = 0
-SHRINK = False
-BG =  [255, 255, 255]
-SIZEX = 0.1
-SIZEY = 0.1
+DIMX1 = 300                          # printbed dimension
+DIMY1 = 300
+OFFSETX1 = 100
+OFFSETY1 = 100
+ROT1 = 45 
+SHRINK1 = False
+BG1 =  [255, 255, 255]
+SIZEX1 = 0.1                        # scaleing loaded img.
+SIZEY1 = 0.1
 class Image2Print(unittest.TestCase):
 
     def test1_calculate_printimage(self):
+        #Test tiff loading, getting img properties, scale to defined value and arrange in printbed
         Image2Print = ImageProcessing.Image2Print()
         Image2Print.calculate_printimage(
-        dpix = DPIX_1 , 
-        dpiy = DPIY_1, 
-        dimx = DIMX, 
-        dimy = DIMY, 
-        path_in = IMAGEPATH_EXISTING,
-        path_out = IMAGEPATH_SAVE,
-        sizex = SIZEX, 
-        sizey = SIZEY, 
-        rot = ROT, 
-        offsetx = OFFSETX,
-        offsety = OFFSETY, 
-        shrink = SHRINK, 
-        bg = BG
+                                            dpix = DPIX_1 , 
+                                            dpiy = DPIY_1, 
+                                            dimx = DIMX1, 
+                                            dimy = DIMY1, 
+                                            path_in = IMAGEPATH_EXISTING,
+                                            path_out = IMAGEPATH_SAVE,
+                                            sizex = SIZEX1, 
+                                            sizey = SIZEY1, 
+                                            rot = ROT1, 
+                                            offsetx = OFFSETX1,
+                                            offsety = OFFSETY1, 
+                                            shrink = SHRINK1, 
+                                            bg = BG1
         )   
+
 
 if __name__ == '__main__':
     unittest.main()

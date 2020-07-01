@@ -131,29 +131,23 @@ class Image2Print:
         print ('\nwidth_resize:', self.img.width, '\nheight_resize:', self.img.height, '\nDPIx_resize:', round(self.img.xres/(1/25.40),3), '\nDPIy_resize:', round(self.img.yres/(1/25.40),3)), 
         print ('\nRotate', self.rot, '°') 
         self.img = self.img.rotate(self.rot, background =self.bg )
-        
+       
         if self.shrink == True:
             if (self.img.width + self.offsetx_px) < self.printbedx_px :
                 self.printbedx_px = (self.img.width + self.offsetx_px)
             if (self.img.height + self.offsety_px) < self.printbedy_px :
                 self.printbedy_px = (self.img.height + self.offsety_px)  
 
-
         print ('Create printbed bounding') 
         self.printbed = pyvips.Image.black(self.printbedx_px, self.printbedy_px)
-                #Debug
-        print('self.printbedx_px', self.printbedx_px)
-        print('self.printbedy_px', self.printbedy_px)
         self.printbed = self.printbed.ifthenelse([0,0,0],self.bg)
         if self.bg == [255,255,255]:
             self.printbed = self.printbed.colourspace('b-w')
+
         print ('Merge images with pixel offset X=', self.offsetx_px,'and Y=', self.offsety_px)
         self.offsety_px = self.printbedy_px - self.img.height - self.offsety_px.magnitude
         self.printbed = self.printbed.insert(self.img, self.offsetx_px.magnitude, self.offsety_px.magnitude)
-    
-        #Debug
-        print('self.offsetx_px.magnitude', self.offsetx_px.magnitude)
-        print('self.offsety_px.magnitude', self.offsety_px.magnitude)
+        
         print ('Convert to B&W') 
         #Create Printimage
         print ('Print image:', self.path_out,  '\n\nwidth_print:', self.printbed.width, '\nheight_print:', self.printbed.height, '\nDPIx_print:', self.dpmmx.magnitude/(1/25.40), '\nDPIy_print:', self.dpmmy.magnitude/(1/25.40)), 
