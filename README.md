@@ -10,12 +10,4 @@
 ```
 docker pull docker.pkg.github.com/janhsen/pyvips/pyvips:latest
 docker build -t pyvips 
-```
-
-### Run the demo
-
-```
-docker run --rm -t -v $PWD:/data pyvips \
-		./wobble.py test.jpg x.jpg
-```
-
+`
