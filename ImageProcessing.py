@@ -23,21 +23,11 @@ class Image2Print:
         self.dpmmx = self.dpix.to(ureg.count / ureg.mm)
         self.dpmmy = self.dpiy.to(ureg.count / ureg.mm)
         if self.dpix > self.dpiy:                                           # Max DPI of the created image
-           self.dpimax = self.dpix  
-           self.dpmmmax = self.dpimax.to(ureg.count / ureg.mm)                       
+           self.dpimax = self.dpix     
         else:
-            self.dpimax = self.dpiy     
-            self.dpmmmax = self.dpimax.to(ureg.count / ureg.mm)                  
-        if (self.dpix/self.dpiy) > 1 :                                      # Shrinking factors
-            self.shrinkx = 1 * ureg.dimensionless
-            self.shrinky = self.dpix/self.dpiy
-        elif (self.dpiy/self.dpix) > 1 :
-            self.shrinkx = self.dpiy/self.dpix
-            self.shrinky = 1 * ureg.dimensionless
-        else:
-            self.shrinkx = 1 * ureg.dimensionless
-            self.shrinky = 1 * ureg.dimensionless
-   
+            self.dpimax = self.dpiy                     
+        self.dpmmmax = self.dpimax.to(ureg.count / ureg.mm)  
+
     def __set_imagepath(self, path :str = './data/test.tiff'):
         """Set image path (*.tiff,*.tif,*.png, *.bmp, *.svg)"""
         path = path.lower()
@@ -56,7 +46,7 @@ class Image2Print:
     def __set_savepath(self, path :str = './data/result.tiff'):
         """Set save path (*.tiff,*.tif)"""
         path = path.lower()
-        if ((path.endswith('.tiff') or path.endswith('.tif')) and os.path.exists(path)) and os.path.isfile(path):
+        if ((path.endswith('.tiff') or path.endswith('.tif'))): # and os.path.exists(path)
             self.path_out = path
             print('\nSet save path: ', self.path_out)
             return True
@@ -120,30 +110,30 @@ class Image2Print:
         self.scalex = round((self.img.xres/self.dpmmmax.magnitude),7)*self.sizex
         self.scaley = round((self.img.yres/self.dpmmmax.magnitude),7)*self.sizey
         print ('Rescale image for DPIx and DPIy x:', self.scalex, 'y:',self.scaley)
-        if self.scalex >= self.scaley :
-            self.img = self.img.resize(self.scalex,vscale = (self.scaley))
-        else:
-            self.img = self.img.resize(self.scalex,vscale = (1/(self.scaley)))
+ 
+        print('self.img.width', self.img.width)
+        print('self.img.height', self.img.height)
         
         print ('\nwidth_resize:', self.img.width, '\nheight_resize:', self.img.height, '\nDPIx_resize:', round(self.img.xres/(1/25.40),3), '\nDPIy_resize:', round(self.img.yres/(1/25.40),3)), 
         print ('\nRotate', self.rot, '°') 
         self.img = self.img.rotate(self.rot, background =self.bg )
-        
+        self.img = self.img.resize(self.scalex,vscale = (self.scaley))
         if self.shrink == True:
             if (self.img.width + self.offsetx_px) < self.printbedx_px :
-                self.self.printbedx_px = (self.img.width + self.offsetx_px)
+                self.printbedx_px = (self.img.width + self.offsetx_px)
             if (self.img.height + self.offsety_px) < self.printbedy_px :
-                self.self.printbedy_px = (self.img.height + self.offsety_px)  
+                self.printbedy_px = (self.img.height + self.offsety_px)  
 
         print ('Create printbed bounding') 
-        self.printbed_px = pyvips.Image.black(self.printbedx_px, self.printbedy_px)
-        
-        self.printbed_px = self.printbed_px.ifthenelse([0,0,0],self.bg)
+        self.printbed = pyvips.Image.black(self.printbedx_px, self.printbedy_px)
+        self.printbed = self.printbed.ifthenelse([0,0,0],self.bg)
         if self.bg == [255,255,255]:
             self.printbed = self.printbed.colourspace('b-w')
+
         print ('Merge images with pixel offset X=', self.offsetx_px,'and Y=', self.offsety_px)
-        self.offsety_px = self.printbedy_px - self.img.height - self.offsety.magnitude
+        self.offsety_px = self.printbedy_px - self.img.height - self.offsety_px.magnitude
         self.printbed = self.printbed.insert(self.img, self.offsetx_px.magnitude, self.offsety_px.magnitude)
+        
         print ('Convert to B&W') 
         #Create Printimage
         print ('Print image:', self.path_out,  '\n\nwidth_print:', self.printbed.width, '\nheight_print:', self.printbed.height, '\nDPIx_print:', self.dpmmx.magnitude/(1/25.40), '\nDPIy_print:', self.dpmmy.magnitude/(1/25.40)), 

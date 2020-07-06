@@ -132,6 +132,7 @@ if ((path_in.endswith('.tiff') or path_in.endswith('.tif') or path_in.endswith('
 
 if imagefound == True:
     img = img.colourspace('b-w')
+
     printbed = img.extract_band(0)
     scalex = round((img.xres/dpimaxmm),7)*sizex
     scaley = round((img.yres/dpimaxmm),7)*sizey
@@ -141,6 +142,11 @@ if imagefound == True:
     else:
         img = img.resize(scalex,vscale = (1/(scaley)))
     
+    #Debug
+    print('img.width', img.width)
+    print('img.height', img.height)
+
+
     print ('\nwidth_resize:', img.width, '\nheight_resize:', img.height, '\nDPIx_resize:', round(img.xres/(1/25.40),3), '\nDPIy_resize:', round(img.yres/(1/25.40),3)), 
     print ('\nRotate', rot, '°') 
     img = img.rotate(rot, background =bg )
@@ -150,6 +156,7 @@ if imagefound == True:
             printbedx = (img.width + xoffset)
         if (img.height + yoffset) < printbedy :
             printbedy = (img.height + yoffset)  
+      
     print ('Create printbed bounding') 
     printbed = pyvips.Image.black(printbedx, printbedy)
     
