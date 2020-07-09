@@ -8,8 +8,9 @@ from opcua import ua, Server, uamethod
 
 
 #execute Python script for ImageProcessing
+
 @uamethod
-def PythonScript(   IMAGEPATH_EXISTING,
+def printImage(     IMAGEPATH_EXISTING,
                     IMAGEPATH_EXISTING_SVG_1,
                     IMAGEPATH_EXISTING_SVG_2,
                     IMAGEPATH_SYNTAX,
@@ -31,7 +32,7 @@ def PythonScript(   IMAGEPATH_EXISTING,
                     BG,
                     SIZEX,
                     SIZEY):
-
+    
     Image2Print = ImageProcessing.Image2Print()     #initialise class
     Image2Print.calculate_printimage(               #execute function
         dpix = DPIX_1 , 
@@ -49,7 +50,7 @@ def PythonScript(   IMAGEPATH_EXISTING,
         bg = BG
         )
     return True
-
+        
 
 if __name__ == "__main__":
 
@@ -69,7 +70,7 @@ if __name__ == "__main__":
     myobj = objects.add_object(idx, "MyObject")
     myvar = myobj.add_variable(idx, "TestVariable", 6.7)
     myvar.set_writable()    # Set MyVariable to be writable by clients
-    
+
     IMAGEPATH_EXISTING = myobj.add_variable(idx, "IMAGEPATH_EXISTING", "./data/Test.tiff")
     IMAGEPATH_EXISTING.set_writable()
     IMAGEPATH_EXISTING_SVG_1 = myobj.add_variable(idx, "IMAGEPATH_EXISTING_SVG_1", "./data/test_corel.svg")
@@ -115,7 +116,8 @@ if __name__ == "__main__":
     SIZEY = myobj.add_variable(idx, "SIZEY", 1)
     SIZEY.set_writable()
 
-    execPythonSkript = myobj.add_method(idx, "ImageTrigger", PythonScript, [IMAGEPATH_EXISTING,IMAGEPATH_EXISTING_SVG_1,IMAGEPATH_EXISTING_SVG_2,IMAGEPATH_SYNTAX,IMAGEPATH_WRONGENDING,IMAGEPATH_NOTEXISTING,IMAGEPATH_SAVE,DPIX_1,DPIY_1,DPIX_2,DPIY_2,DPIX_3,DPIY_3,DIMX,DIMY,OFFSETX,OFFSETY,ROT,SHRINK,BG,SIZEX,SIZEY], [ua.VariantType.Boolean])
+    execPrintImage =  myobj.add_method(idx, "Calulate_printImage", printImage, [IMAGEPATH_EXISTING,IMAGEPATH_EXISTING_SVG_1,IMAGEPATH_EXISTING_SVG_2,IMAGEPATH_SYNTAX,IMAGEPATH_WRONGENDING,IMAGEPATH_NOTEXISTING,IMAGEPATH_SAVE,DPIX_1,DPIY_1,DPIX_2,DPIY_2,DPIX_3,DPIY_3,DIMX,DIMY,OFFSETX,OFFSETY,ROT,SHRINK,BG,SIZEX,SIZEY], [ua.VariantType.Boolean])
+    
 
     # starting!
     server.start()
