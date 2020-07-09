@@ -72,7 +72,7 @@ if __name__ == "__main__":
     myvar = myobj.add_variable(idx, "TestVariable", 6.7)
     myvar.set_writable()    # Set MyVariable to be writable by clients
 
-    execPythonSkript = myobj.add_method(idx, "Trigger", PythonScript, [], [ua.VariantType.Boolean])
+    execPythonSkript = myobj.add_method(idx, "ImageTrigger", PythonScript, [], [ua.VariantType.Boolean]) #sollen Variablen via opc ua übergeben werden? -> müssen in [] eingetetragen werden
 
     # starting!
     server.start()
