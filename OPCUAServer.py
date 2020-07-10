@@ -97,9 +97,20 @@ if __name__ == "__main__":
     SIZEY.set_writable()
 
     PATH = myobj.add_variable(idx, "PATH", "/data/result.tiff")
+    PATH.set_writable()
 
+    trigger = myobj.add_variable(idx, "trigger", False)
+    trigger.set_writable()
     execPrintImage =  myobj.add_method(idx, "Calulate_printImage", printImage, [IMAGEPATH_EXISTING,IMAGEPATH_SAVE,DPIX,DPIY,DIMX,DIMY,OFFSETX,OFFSETY,ROT,SHRINK,BG,SIZEX,SIZEY], [ua.VariantType.Boolean])
     execImagProp = myobj.add_method(idx, "Image_Properties", ImageProperties, [PATH], [ua.VariantType.dict])
+
+    if (trigger==True):
+        print("image calculation is executed")
+        execPrintImage =  myobj.add_method(idx, "Calulate_printImage", printImage, [IMAGEPATH_EXISTING,IMAGEPATH_SAVE,DPIX,DPIY,DIMX,DIMY,OFFSETX,OFFSETY,ROT,SHRINK,BG,SIZEX,SIZEY], [ua.VariantType.Boolean])
+        execImagProp = myobj.add_method(idx, "Image_Properties", ImageProperties, [PATH], [ua.VariantType.dict])
+    else:
+        print("image calculation is not executet")
+
 
     # starting!
     server.start()
