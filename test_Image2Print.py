@@ -20,6 +20,10 @@ class Image2Print(unittest.TestCase):
                                             offsety = 0, 
                                             shrink = False, 
                                             bg =  [255, 255, 255]
+        )
+        Image2Print.get_image_prop(
+                                            path = "./data/Test.tiff",
+                                            dpimax = 100
         )   
 
     def test2_calculate_printimage(self):

@@ -275,3 +275,4 @@ class Image2Print:
         else:
             return
         return self.__get_image_prop()
+        print(self.__get_image_prop())
