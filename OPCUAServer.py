@@ -11,18 +11,9 @@ from opcua import ua, Server, uamethod
 
 @uamethod
 def printImage(     IMAGEPATH_EXISTING,
-                    IMAGEPATH_EXISTING_SVG_1,
-                    IMAGEPATH_EXISTING_SVG_2,
-                    IMAGEPATH_SYNTAX,
-                    IMAGEPATH_WRONGENDING,
-                    IMAGEPATH_NOTEXISTING,
                     IMAGEPATH_SAVE,
-                    DPIX_1,
-                    DPIY_1,
-                    DPIX_2,
-                    DPIY_2,
-                    DPIX_3,
-                    DPIY_3,
+                    DPIX,
+                    DPIY,
                     DIMX,
                     DIMY,
                     OFFSETX,
@@ -35,8 +26,8 @@ def printImage(     IMAGEPATH_EXISTING,
     
     Image2Print = ImageProcessing.Image2Print()     #initialise class
     Image2Print.calculate_printimage(               #execute function
-        dpix = DPIX_1 , 
-        dpiy = DPIY_1, 
+        dpix = DPIX , 
+        dpiy = DPIY, 
         dimx = DIMX, 
         dimy = DIMY, 
         path_in = IMAGEPATH_EXISTING,
@@ -50,6 +41,13 @@ def printImage(     IMAGEPATH_EXISTING,
         bg = BG
         )
     return True
+
+@uamethod
+def ImageProperties(PATH):
+    Image2Print = ImageProcessing.Image2Print()     #initialise class
+    ImgPrp = Image2Print.get_image_prop(path = PATH,dpimax = 100 )
+    print(ImgPrp)
+    return ImgPrp
         
 
 if __name__ == "__main__":
@@ -73,30 +71,12 @@ if __name__ == "__main__":
 
     IMAGEPATH_EXISTING = myobj.add_variable(idx, "IMAGEPATH_EXISTING", "./data/Test.tiff")
     IMAGEPATH_EXISTING.set_writable()
-    IMAGEPATH_EXISTING_SVG_1 = myobj.add_variable(idx, "IMAGEPATH_EXISTING_SVG_1", "./data/test_corel.svg")
-    IMAGEPATH_EXISTING_SVG_1.set_writable()
-    IMAGEPATH_EXISTING_SVG_2 = myobj.add_variable(idx, "IMAGEPATH_EXISTING_SVG_2", "./data/test_inkscape.svg")
-    IMAGEPATH_EXISTING_SVG_2.set_writable()
-    IMAGEPATH_SYNTAX = myobj.add_variable(idx, "IMAGEPATH_SYNTAX", "./data/Test.TIFF")
-    IMAGEPATH_SYNTAX.set_writable()
-    IMAGEPATH_WRONGENDING = myobj.add_variable(idx, "IMAGEPATH_WRONGENDING","./data/x.jpg")
-    IMAGEPATH_WRONGENDING.set_writable()
-    IMAGEPATH_NOTEXISTING = myobj.add_variable(idx, "IMAGEPATH_NOTEXISTING", "./data/Tester.jpg")
-    IMAGEPATH_NOTEXISTING.set_writable()
     IMAGEPATH_SAVE = myobj.add_variable(idx, "IMAGEPATH_SAVE", "./data/result.tiff")
     IMAGEPATH_SAVE.set_writable()
-    DPIX_1 = myobj.add_variable(idx,"DPIX_1", 100)
-    DPIX_1.set_writable()
-    DPIY_1 = myobj.add_variable(idx, "DPIY_1", 200)
-    DPIY_1.set_writable()
-    DPIX_2 = myobj.add_variable(idx, "DPIX_2", 100)
-    DPIX_2.set_writable()
-    DPIY_2 = myobj.add_variable(idx, "DPIY_2", 100)
-    DPIY_2.set_writable()
-    DPIX_3 = myobj.add_variable(idx, "DPIX_3", 300)
-    DPIX_3.set_writable()
-    DPIY_3 = myobj.add_variable(idx, "DPIY_3", 100)
-    DPIY_3.set_writable()
+    DPIX = myobj.add_variable(idx,"DPIX", 100)
+    DPIX.set_writable()
+    DPIY = myobj.add_variable(idx, "DPIY", 200)
+    DPIY.set_writable()
     DIMX = myobj.add_variable(idx, "DIMX", 125.4)
     DIMX.set_writable()
     DIMY = myobj.add_variable(idx, "DIMY", 150.8)
@@ -116,8 +96,10 @@ if __name__ == "__main__":
     SIZEY = myobj.add_variable(idx, "SIZEY", 1)
     SIZEY.set_writable()
 
-    execPrintImage =  myobj.add_method(idx, "Calulate_printImage", printImage, [IMAGEPATH_EXISTING,IMAGEPATH_EXISTING_SVG_1,IMAGEPATH_EXISTING_SVG_2,IMAGEPATH_SYNTAX,IMAGEPATH_WRONGENDING,IMAGEPATH_NOTEXISTING,IMAGEPATH_SAVE,DPIX_1,DPIY_1,DPIX_2,DPIY_2,DPIX_3,DPIY_3,DIMX,DIMY,OFFSETX,OFFSETY,ROT,SHRINK,BG,SIZEX,SIZEY], [ua.VariantType.Boolean])
-    
+    PATH = myobj.add_variable(idx, "PATH", "/data/result.tiff")
+
+    execPrintImage =  myobj.add_method(idx, "Calulate_printImage", printImage, [IMAGEPATH_EXISTING,IMAGEPATH_SAVE,DPIX,DPIY,DIMX,DIMY,OFFSETX,OFFSETY,ROT,SHRINK,BG,SIZEX,SIZEY], [ua.VariantType.Boolean])
+    execImagProp = myobj.add_method(idx, "Image_Properties", ImageProperties, [PATH], [ua.VariantType.dict])
 
     # starting!
     server.start()

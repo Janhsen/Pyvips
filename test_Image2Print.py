@@ -40,6 +40,7 @@ class Image2Print(unittest.TestCase):
                                             shrink = False, 
                                             bg =  [240, 240, 240]
         )   
+        #self.assertEqual(img_prop, 145)
 
     def test3_calculate_printimage(self):
         #Test roatate
