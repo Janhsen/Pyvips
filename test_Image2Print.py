@@ -3,6 +3,15 @@ import ImageProcessing
 import pint
 
 class Image2Print(unittest.TestCase):
+
+    def test0_calculate_printimage(self):
+        Image2Print = ImageProcessing.Image2Print()
+        Image2Print.get_image_prop(
+                                            path = "./data/Test.tiff",
+                                            dpimax = 100
+        )   
+
+
     def test1_calculate_printimage(self):
         #Test tiff loading, getting img properties, scale to defined value and arrange in printbed
         Image2Print = ImageProcessing.Image2Print()
@@ -21,10 +30,6 @@ class Image2Print(unittest.TestCase):
                                             shrink = False, 
                                             bg =  [255, 255, 255]
         )
-        Image2Print.get_image_prop(
-                                            path = "./data/Test.tiff",
-                                            dpimax = 100
-        )   
 
     def test2_calculate_printimage(self):
         #Test bg image
