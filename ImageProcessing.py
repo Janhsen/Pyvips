@@ -20,13 +20,14 @@ class Image2Print:
         self.offsetx_px = round(self.offsetx_px.to_reduced_units())
         self.offsety_px = self.offsety * self.dpiy                          # Offset in pixel in y direction
         self.offsety_px = round(self.offsety_px.to_reduced_units())
-        self.dpmmx = self.dpix.to(ureg.count / ureg.mm)
-        self.dpmmy = self.dpiy.to(ureg.count / ureg.mm)
         if self.dpix > self.dpiy:                                           # Max DPI of the created image
            self.dpimax = self.dpix     
         else:
             self.dpimax = self.dpiy                     
         self.dpmmmax = self.dpimax.to(ureg.count / ureg.mm)  
+        
+        self.dpmmx = self.dpix.to(ureg.count / ureg.mm)
+        self.dpmmy = self.dpiy.to(ureg.count / ureg.mm)
 
     def __set_imagepath(self, path :str = './data/test.tiff'):
         """Set image path (*.tiff,*.tif,*.png, *.bmp, *.svg)"""
@@ -79,6 +80,22 @@ class Image2Print:
                 print ('\nNo image loaded')
                 return False
 
+    def __load_svg_simple(self):
+        """Loads SVG with DPImax resoultion
+
+        Returns:
+            [BOOL]: [True if sucessfull | False if no SVG loaded]
+        """        
+        if self.path_in != '' :
+                """Load SVG"""
+                print ('\nLoad SVG:', self.path_in),
+                self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax.magnitude)
+                return True
+        else:
+                print ('\nNo image loaded')
+                return False
+
+
     def __load_bitmap(self):
         """Loads Bitmaps *.tiff,*.tif,*.png, *.bmp with spec. DPImax resolution
 
@@ -99,6 +116,20 @@ class Image2Print:
                 self.img = self.img.resize((1/self.scalex),vscale = (self.scaley))
             self.buffer = self.img.tiffsave_buffer(xres = self.dpmmx.magnitude, yres = self.dpmmy.magnitude)
             self.img = pyvips.Image.tiffload_buffer(self.buffer)
+            return True
+        else:
+            print ('\nNo image loaded')
+            return False
+
+    def __load_bitmap_simple(self):
+        """Loads Bitmaps *.tiff,*.tif,*.png, *.bmp with spec. DPImax resolution
+
+        Returns:
+            [BOOL]: [True if sucessfull | False if no bitmap loaded]
+        """        
+        if self.path_in != '' :
+            self.img = pyvips.Image.new_from_file(self.path_in)
+            print ('\nLoad bitmap:', self.path_in)
             return True
         else:
             print ('\nNo image loaded')
@@ -269,9 +300,9 @@ class Image2Print:
         self.dpimax = dpimax
         self.__set_imagepath(path)
         if self.path_in.endswith('.svg'):
-            self.__load_svg()
+            self.__load_svg_simple()
         elif self.path_in.endswith('.tif') or self.path_in.endswith('.tiff') or self.path_in.endswith('.png') or self.path_in.endswith('.bmp') :
-            self.__load_bitmap()
+            self.__load_bitmap_simple()
         else:
             return
         return self.__get_image_prop()
