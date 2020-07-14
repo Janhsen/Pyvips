@@ -26,6 +26,7 @@ if __name__ == "__main__":
     CalculatePrintimageIn = CalculatePrintimage.add_object(idx, "stIn")
     CalculatePrintimageOut = CalculatePrintimage.add_object(idx, "stOut")
     GetImageProperties = ImageProcessing.add_object(idx, "stGetImageProperties")
+
     ExecuteCalculatePrintimage = CalculatePrintimage.add_variable(idx, "xExecute", False) 
     path_in = CalculatePrintimageIn.add_variable(idx, "sPath_in", "./data/Test.tiff")
     path_in.set_writable()
@@ -54,12 +55,28 @@ if __name__ == "__main__":
     sizey = CalculatePrintimageIn.add_variable(idx, "rSizeX", 1.0)
     sizey.set_writable()
 
+    ExecuteGetImageProperties = GetImageProperties.add_variable(idx, "xExecute", False)
+    path = GetImageProperties.add_variable(idx, "path", "./data/Test.tiff")
+    path.set_writable()
+    dpimax = GetImageProperties.add_variable(idx, "dpimax", 100)
+    dpimax.set_writable()
+
     # starting!
     server.start()
 
     try:
         while True:
             time.sleep(0.05)
+            if (ExecuteCalculatePrintimage==True):
+                Image2Print = ImageProcessing.Image2Print()
+                Image2Print.calculate_printimage(path_in, path_out, dpix, dpiy, dimx, dimy, offsetx, offsety, rot, shrink, bg, sizex, sizey)
+                ExecuteCalculatePrintimage = False
+
+            if (ExecuteGetImageProperties == True):
+                Image2Print = ImageProcessing.Image2Print()
+                Image2Print.get_image_prop(path, dpimax)
+                ExecuteGetImageProperties = False
+
 
     except IOError:
         pass
