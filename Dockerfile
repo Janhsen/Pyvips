@@ -12,3 +12,4 @@ COPY OPCUAServer.py /data
 CMD [ "python", "/data/OPCUAServer.py" ]
 
 WORKDIR /data
+ENV OPCUAPORT=${OPCUAPORT}
