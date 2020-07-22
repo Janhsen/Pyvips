@@ -6,4 +6,10 @@ RUN apt-get update \
 
 RUN pip3 install pyvips
 
+COPY ImageProcessing.py /data
+COPY OPCUAServer.py /data
+
+CMD [ "python", "/data/OPCUAServer.py" ]
+
 WORKDIR /data
+ENV OPCUAPORT=${OPCUAPORT}
