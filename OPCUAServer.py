@@ -11,11 +11,8 @@ if __name__ == "__main__":
     server.set_endpoint("opc.tcp://0.0.0.0:4840/fraunhoferipa/server/")
     server.set_server_name("Fraunhofer OpcUa Server")
     server.set_security_policy([ua.SecurityPolicyType.NoSecurity])
-    
-    # setup namespace
     uri = "http://ipa.fraunhofer.de"
     idx = server.register_namespace(uri)
-
     # get Objects node, this is where we should put our nodes
     objects = server.get_objects_node()
     # populating our address space
@@ -53,7 +50,7 @@ if __name__ == "__main__":
     sizex.set_writable()
     sizey = CalculatePrintimageIn.add_variable(idx, "rSizeX", .1)
     sizey.set_writable()
-    
+
     ExecuteGetImageProperties = GetImageProperties.add_variable(idx, "xExecute", False)
     ExecuteGetImageProperties.set_writable()
 
@@ -98,8 +95,8 @@ if __name__ == "__main__":
 
             if (ExecuteGetImageProperties.get_value() is True):
                 Image2Print = ImageProcessing.Image2Print()
-                img_prop = Image2Print.get_image_prop( path = path.get_value(), 
-                                                        dpimax = dpimax.get_value())            
+                img_prop = Image2Print.get_image_prop(path=path.get_value(),
+                                                        dpimax=dpimax.get_value())            
                 width_px.set_value(img_prop['width_px'])
                 height_px.set_value(img_prop['height_px'])
                 dpmmx.set_value(img_prop['dpmmx'])

@@ -7,10 +7,9 @@ class Image2Print(unittest.TestCase):
     def test0_calculate_printimage(self):
         Image2Print = ImageProcessing.Image2Print()
         Image2Print.get_image_prop(
-                                            path = "./data/Test.tiff",
-                                            dpimax = 100
-        )   
-
+                                            path="./data/Test.tiff",
+                                            dpimax=100
+        )
 
     def test1_calculate_printimage(self):
         #Test tiff loading, getting img properties, scale to defined value and arrange in printbed

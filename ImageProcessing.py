@@ -4,9 +4,10 @@ import pint
 
 ureg = pint.UnitRegistry()
 
+
 class Image2Print:
 
-    def __calc_factors(self): 
+    def __calc_factors(self):
         """Calculate image factors
         """        
         self.printbedx_px = self.dimx * self.dpix                           # Printbed pixel in x direction
@@ -35,7 +36,7 @@ class Image2Print:
             return True
         else:
             self.path_in = './data/test.tiff'
-            if os.path.isfile(path) != True:
+            if os.path.isfile(path) is not True:
                     print('File not found')
             elif (path.endswith('.tiff') or path.endswith('.tif') or path.endswith('.png') or path.endswith('.bmp') != True) :
                 print('\nWrong file ending')
@@ -50,7 +51,7 @@ class Image2Print:
             return True
         else:
             self.path_out = './data/result.tiff'
-            if os.path.isfile(path) != True:
+            if os.path.isfile(path) is not True:
                     print('Output file wrong new path: ', self.path_out)
             elif (path.endswith('.tiff') or path.endswith('.tif') != True) :
                 print('\nWrong file ending')
@@ -108,9 +109,9 @@ class Image2Print:
             self.scaley = round((self.img.yres / self.dpmmmax.magnitude),7)
             print ('\nResize org. image x:', 1/self.scalex, 'y:', 1/self.scaley)
             if self.scalex >= self.scaley :
-                self.img = self.img.resize((1/self.scalex),vscale = (1/(self.scaley)))
+                self.img = self.img.resize((1/self.scalex), vscale=(1/(self.scaley)))
             else:
-                self.img = self.img.resize((1/self.scalex),vscale = (self.scaley))
+                self.img = self.img.resize((1/self.scalex), vscale=(self.scaley))
             self.buffer = self.img.tiffsave_buffer(xres = self.dpmmx.magnitude, yres = self.dpmmy.magnitude)
             self.img = pyvips.Image.tiffload_buffer(self.buffer)
             return True
@@ -143,9 +144,9 @@ class Image2Print:
         print('self.img.height', self.img.height)
         
         print ('\nwidth_resize:', self.img.width, '\nheight_resize:', self.img.height, '\nDPIx_resize:', round(self.img.xres/(1/25.40),3), '\nDPIy_resize:', round(self.img.yres/(1/25.40),3)), 
-        print ('\nRotate', self.rot, '°') 
-        self.img = self.img.rotate(self.rot, background =self.bg )
-        self.img = self.img.resize(self.scalex,vscale = (self.scaley))
+        print('\nRotate', self.rot, '°') 
+        self.img = self.img.rotate(self.rot, background =self.bg)
+        self.img = self.img.resize(self.scalex, vscale = (self.scaley))
         if self.shrink == True:
             if (self.img.width + self.offsetx_px) < self.printbedx_px :
                 self.printbedx_px = (self.img.width + self.offsetx_px)
