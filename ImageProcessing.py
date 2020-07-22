@@ -1,11 +1,8 @@
-import argparse
 import os
-import pathlib
-import random
 import pyvips
 import pint
 
-ureg = pint.UnitRegistry() 
+ureg = pint.UnitRegistry()
 
 class Image2Print:
 
@@ -306,4 +303,3 @@ class Image2Print:
         else:
             return
         return self.__get_image_prop()
-        print("TEST", self.__get_image_prop())

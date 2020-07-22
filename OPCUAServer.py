@@ -1,9 +1,8 @@
 import sys
-sys.path.insert(0, "..")
 import time
-import logging
 import ImageProcessing
-from opcua import ua, Server, uamethod
+from opcua import ua, Server
+sys.path.insert(0, "..")
 
 if __name__ == "__main__":
 
@@ -12,14 +11,13 @@ if __name__ == "__main__":
     server.set_endpoint("opc.tcp://0.0.0.0:4840/fraunhoferipa/server/")
     server.set_server_name("Fraunhofer OpcUa Server")
     server.set_security_policy([ua.SecurityPolicyType.NoSecurity])
-
+    
     # setup namespace
     uri = "http://ipa.fraunhofer.de"
     idx = server.register_namespace(uri)
 
     # get Objects node, this is where we should put our nodes
     objects = server.get_objects_node()
-
     # populating our address space
     OPCUA_ImageProcessing = objects.add_object(idx, "stImageProcessing")
     CalculatePrintimage = OPCUA_ImageProcessing.add_object(idx, "stCalculatePrintimage")
@@ -49,13 +47,13 @@ if __name__ == "__main__":
     rot.set_writable()
     shrink = CalculatePrintimageIn.add_variable(idx, "xShrink", False)
     shrink.set_writable()
-    bg =  CalculatePrintimageIn.add_variable(idx, "arrBG", [255, 255, 255])
+    bg = CalculatePrintimageIn.add_variable(idx, "arrBG", [255, 255, 255])
     bg.set_writable()
     sizex = CalculatePrintimageIn.add_variable(idx, "rSizeX", .1)
     sizex.set_writable()
     sizey = CalculatePrintimageIn.add_variable(idx, "rSizeX", .1)
     sizey.set_writable()
-
+    
     ExecuteGetImageProperties = GetImageProperties.add_variable(idx, "xExecute", False)
     ExecuteGetImageProperties.set_writable()
 
@@ -73,16 +71,14 @@ if __name__ == "__main__":
     height_mm = GetImagePropertiesOut.add_variable(idx, "rHeight_mm", 0.0)
     DPIx = GetImagePropertiesOut.add_variable(idx, "nDPIx", 0)
     DPIy = GetImagePropertiesOut.add_variable(idx, "nDPIy", 0)
-    
 
     # starting!
     server.start()
 
     try:
         while True:
-            time.sleep(0.05)
-    
-            if (ExecuteCalculatePrintimage.get_value()==True):
+            time.sleep(0.05)  
+            if (ExecuteCalculatePrintimage.get_value() is True):
                 Image2Print = ImageProcessing.Image2Print()
                 print(path_in.get_value())
                 Image2Print.calculate_printimage(dpix = dpix.get_value(), 
@@ -100,11 +96,10 @@ if __name__ == "__main__":
                                                  bg = bg.get_value())
                 ExecuteCalculatePrintimage.set_value(False)
 
-            if (ExecuteGetImageProperties.get_value() == True):
+            if (ExecuteGetImageProperties.get_value() is True):
                 Image2Print = ImageProcessing.Image2Print()
                 img_prop = Image2Print.get_image_prop( path = path.get_value(), 
-                                            dpimax = dpimax.get_value())
-                
+                                                        dpimax = dpimax.get_value())            
                 width_px.set_value(img_prop['width_px'])
                 height_px.set_value(img_prop['height_px'])
                 dpmmx.set_value(img_prop['dpmmx'])
@@ -113,11 +108,7 @@ if __name__ == "__main__":
                 height_mm.set_value(img_prop['height_mm'])
                 DPIx.set_value(img_prop['DPIx'])
                 DPIy.set_value(img_prop['DPIy'])
-
                 ExecuteGetImageProperties.set_value(False)
-                
-                #OPCUAimg_prop.set_values(img_prop)
-
 
     except IOError:
         pass

@@ -1,6 +1,6 @@
 import unittest
 import ImageProcessing
-import pint
+
 
 class Image2Print(unittest.TestCase):
 
