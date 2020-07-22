@@ -7,3 +7,5 @@ RUN apt-get update \
 RUN pip3 install pyvips
 
 WORKDIR /data
+
+ENV OPCUAPORT=${OPCUAPORT}
