@@ -10,6 +10,8 @@ if __name__ == "__main__":
     server = Server()
     server.set_endpoint("opc.tcp://0.0.0.0:4840/fraunhoferipa/server/")
     server.set_server_name("Fraunhofer OpcUa Server")
+    server.set_build_info("http://ipa.fraunhofer.de", 'Fraunhofer IPA', 'ImageProcessing',1,1,'')
+    server.set_application_uri("http://ipa.fraunhofer.de")
     server.set_security_policy([ua.SecurityPolicyType.NoSecurity])
     uri = "http://ipa.fraunhofer.de"
     idx = server.register_namespace(uri)

@@ -4,7 +4,6 @@ import pint
 
 ureg = pint.UnitRegistry()
 
-
 class Image2Print:
 
     def __calc_factors(self):
