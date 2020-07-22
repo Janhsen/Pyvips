@@ -1,9 +1,10 @@
 import os
+vipshome = 'C:\\Program Files\\vips\\bin'
+os.environ['PATH'] = vipshome + ';' + os.environ['PATH']
 import pyvips
 import pint
 
 ureg = pint.UnitRegistry()
-
 class Image2Print:
 
     def __calc_factors(self):

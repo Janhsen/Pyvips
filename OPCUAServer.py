@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     # setup server
     server = Server()
-    server.set_endpoint("opc.tcp://0.0.0.0:4840/fraunhoferipa/server/")
+    server.set_endpoint("opc.tcp://0.0.0.0:4841/fraunhoferipa/server/")
     server.set_server_name("Fraunhofer OpcUa Server")
     server.set_build_info("http://ipa.fraunhofer.de", 'Fraunhofer IPA', 'ImageProcessing',1,1,'')
     server.set_application_uri("http://ipa.fraunhofer.de")
