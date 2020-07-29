@@ -272,19 +272,32 @@ class Image2Print:
                 shrink (bool, optional): [Shrink the printing image to smallest size Y | N]. Defaults to True.
                 bg (list, optional): [Background colour -> Fraunhofer RGB [23,156,125]']. Defaults to [255,255,255].
         """  
-        self.__set_printsettings(dpix, dpiy, dimx, dimy, sizex , sizey , rot, offsetx , offsety, shrink, bg)
-        self.__set_imagepath(path_in)
-        self.__set_savepath(path_out)
-        self.__calc_factors()
-        if self.path_in.endswith('.svg'):
-            self.__load_svg()
-        elif self.path_in.endswith('.tif') or self.path_in.endswith('.tiff') or self.path_in.endswith('.png') or self.path_in.endswith('.bmp') :
-            self.__load_bitmap()
+        if dpix > 0 and dpiy > 0 and dimx > 0 and dimy > 0 and sizex > 0 and sizey > 0:
+            self.__set_printsettings(dpix, dpiy, dimx, dimy, sizex , sizey , rot, offsetx , offsety, shrink, bg)
+            self.__set_imagepath(path_in)
+            self.__set_savepath(path_out)
+            self.__calc_factors()
+            if self.path_in.endswith('.svg'):
+                self.__load_svg()
+            elif self.path_in.endswith('.tif') or self.path_in.endswith('.tiff') or self.path_in.endswith('.png') or self.path_in.endswith('.bmp') :
+                self.__load_bitmap()
+            else:
+                return
+            img_prop = self.__get_image_prop()
+            self.__calc_image()
+            return (img_prop)
         else:
-            return
-        img_prop = self.__get_image_prop()
-        self.__calc_image()
-        return (img_prop)
+            return ( {
+                        'width_px' : 0,
+                        'height_px' : 0,
+                        'dpmmx' : 0,
+                        'dpmmy' : 0,
+                        'width_mm' : self.img_width_mm,
+                        'height_mm' : self.img_height_mm,
+                        'DPIx' : self.img_dpix,
+                        'DPIy' : self.img_dpiy
+                     }
+            )
 
     def get_image_prop(self, path : str, dpimax: int = 100 ):
         """Get image properties of a given image
