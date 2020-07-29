@@ -1,14 +1,14 @@
-
 import sys
 from opcua import Client
 from opcua import ua
-import logging
+import threading
 import time
 import ImageProcessing
 sys.path.insert(0, "..")
-logging.basicConfig()
 
 #Node Defs
+xHeartbeat = {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.xHeartbeat'}
+
 stCalculatePrintImage = {'xExecute': {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.xExecute'},
                         'stIn': {   'arrBg'     : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.arrBg'},
                                     'nDpiX'     : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.nDpiX'},
@@ -39,20 +39,28 @@ stGetImageProperties = {'xExecute': {'NodeID':'ns=4;s=|var|CODESYS Control RTE x
                                     'rDpmmY'        : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.rDpmmY'},
                                     'nDpiX'         : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.nDpiX'},
                                     'nDpiY'         : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.nDpiY'},
-                                    'xError'         : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.xError'}
+                                    'xError'        : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.xError'}
                                 }
                         }
 
 
+def Heartbeat():
+    while True:
+        xHeartbeat.get('node').set_value(not(xHeartbeat.get('node').get_value()))
+        time.sleep(1)
+        #print('xHeartbeat :', xHeartbeat.get('node').get_value())
+       
 
 if __name__ == "__main__":
-    
+
+
     client = Client("opc.tcp://localhost:4840")
     try:
         client.connect()
 
-### Get Nodes
+        ### Register / Get Nodes
         print('Get nodes')
+        xHeartbeat['node'] = client.get_node(xHeartbeat.get('NodeID'))
         stCalculatePrintImage['xExecute']['node'] = client.get_node(stCalculatePrintImage.get('xExecute').get('NodeID'))
         stCalculatePrintImage['stIn']['arrBg']['node'] = client.get_node(stCalculatePrintImage.get('stIn').get('arrBg').get('NodeID'))
         stCalculatePrintImage['stIn']['nDpiX']['node'] = client.get_node(stCalculatePrintImage.get('stIn').get('nDpiX').get('NodeID'))
@@ -67,6 +75,7 @@ if __name__ == "__main__":
         stCalculatePrintImage['stIn']['sPathIn']['node'] = client.get_node(stCalculatePrintImage.get('stIn').get('sPathIn').get('NodeID'))
         stCalculatePrintImage['stIn']['sPathOut']['node'] = client.get_node(stCalculatePrintImage.get('stIn').get('sPathOut').get('NodeID'))
         stCalculatePrintImage['stIn']['xShrink']['node'] = client.get_node(stCalculatePrintImage.get('stIn').get('xShrink').get('NodeID'))
+        stCalculatePrintImage['stOut']['xError']['node'] = client.get_node(stCalculatePrintImage.get('stOut').get('xError').get('NodeID'))
 
         stGetImageProperties['xExecute']['node'] = client.get_node(stGetImageProperties.get('xExecute').get('NodeID'))
         stGetImageProperties['stIn']['nDpiMax']['node'] = client.get_node(stGetImageProperties.get('stIn').get('nDpiMax').get('NodeID'))
@@ -79,9 +88,15 @@ if __name__ == "__main__":
         stGetImageProperties['stOut']['rDpmmY']['node'] = client.get_node(stGetImageProperties.get('stOut').get('rDpmmY').get('NodeID'))  
         stGetImageProperties['stOut']['nDpiX']['node'] = client.get_node(stGetImageProperties.get('stOut').get('nDpiX').get('NodeID'))
         stGetImageProperties['stOut']['nDpiY']['node'] = client.get_node(stGetImageProperties.get('stOut').get('nDpiY').get('NodeID'))  
+        stGetImageProperties['stOut']['xError']['node'] = client.get_node(stGetImageProperties.get('stOut').get('xError').get('NodeID'))
 
-## Get get Node values
+        # Start xHeartbeat Thread 
+        t = threading.Thread(target=Heartbeat)  
+        t.start()
+##
+        #Get get Node values
         #print('Get node values')
+        #xHeartbeat['value'] = xHeartbeat.get('node').get_value()
         #stCalculatePrintImage['xExecute']['value'] = stCalculatePrintImage.get('xExecute').get('node').get_value()
         #stCalculatePrintImage['stIn']['arrBg']['value'] = stCalculatePrintImage.get('stIn').get('arrBg').get('node').get_value()
         #stCalculatePrintImage['stIn']['nDpiX']['value'] = stCalculatePrintImage.get('stIn').get('nDpiX').get('node').get_value()
@@ -96,6 +111,7 @@ if __name__ == "__main__":
         #stCalculatePrintImage['stIn']['sPathIn']['value'] = stCalculatePrintImage.get('stIn').get('sPathIn').get('node').get_value()
         #stCalculatePrintImage['stIn']['sPathOut']['value'] = stCalculatePrintImage.get('stIn').get('sPathOut').get('node').get_value()
         #stCalculatePrintImage['stIn']['xShrink']['value'] = stCalculatePrintImage.get('stIn').get('xShrink').get('node').get_value()
+        #stCalculatePrintImage['stOut']['xError']['value'] = stCalculatePrintImage.get('stOut').get('xError').get('node').get_value()
 
         #stGetImageProperties['xExecute']['value'] = stGetImageProperties.get('xExecute').get('node').get_value()
         #stGetImageProperties['stIn']['nDpiMax']['value'] = stGetImageProperties.get('stIn').get('nDpiMax').get('node').get_value()
@@ -108,8 +124,10 @@ if __name__ == "__main__":
         #stGetImageProperties['stOut']['rDpmmY']['value'] = stGetImageProperties.get('stOut').get('rDpmmY').get('node').get_value()
         #stGetImageProperties['stOut']['nDpiX']['value'] = stGetImageProperties.get('stOut').get('nDpiX').get('node').get_value()
         #stGetImageProperties['stOut']['nDpiY']['value'] = stGetImageProperties.get('stOut').get('nDpiY').get('node').get_value()
+        #stGetImageProperties['stOut']['xError']['value'] = stGetImageProperties.get('stOut').get('xError').get('node').get_value()
 
-####  Read stCalculatePrintImage
+        ####  Read stCalculatePrintImage
+        #print("\nValue read from variable xHeartbeat : %s" % xHeartbeat['value'])
         #print("\nValue read from variable stCalculatePrintImage.xExecute : %s" % stCalculatePrintImage['xExecute']['value'])
         #print("Value read from variable stCalculatePrintImage.stIn.arrBg : %s" % stCalculatePrintImage['stIn']['arrBg']['value'])
         #print("Value read from variable stCalculatePrintImage.stIn.nDpiX : %s" % stCalculatePrintImage['stIn']['nDpiX']['value'])
@@ -124,6 +142,7 @@ if __name__ == "__main__":
         #print("Value read from variable stCalculatePrintImage.stIn.sPathIn : %s" % stCalculatePrintImage['stIn']['sPathIn']['value'])
         #print("Value read from variable stCalculatePrintImage.stIn.sPathOut : %s" % stCalculatePrintImage['stIn']['sPathOut']['value'])
         #print("Value read from variable stCalculatePrintImage.stIn.xShrink : %s" % stCalculatePrintImage['stIn']['xShrink']['value'])
+        #print("Value read from variable stCalculatePrintImage.stIn.xError : %s" % stCalculatePrintImage['stOut']['xError']['value'])
 
         #print("\nValue read from variable stGetImageProperties.xExecute : %s" % stGetImageProperties['xExecute']['value'])
         #print("Value read from variable stGetImageProperties.stIn.nDpiMax : %s" % stGetImageProperties['stIn']['nDpiMax']['value'])
@@ -136,13 +155,14 @@ if __name__ == "__main__":
         #print("Value read from variable stGetImageProperties.stOut.rDpmmY : %s" % stGetImageProperties['stOut']['rDpmmY']['value'])
         #print("Value read from variable stGetImageProperties.stOut.nDpiX : %s" % stGetImageProperties['stOut']['nDpiX']['value'])
         #print("Value read from variable stGetImageProperties.stOut.nDpiY : %s" % stGetImageProperties['stOut']['nDpiY']['value'])
-
-        ## LOOP
+        #print("Value read from variable stGetImageProperties.stOut.xError : %s" % stGetImageProperties['stOut']['xError']['value'])
+##
+        ## Main Loop
         while True:
             time.sleep(0.05)  
             if (stCalculatePrintImage.get('xExecute').get('node').get_value() is True):
                 Image2Print = ImageProcessing.Image2Print()
-                Image2Print.calculate_printimage(dpix = stCalculatePrintImage.get('stIn').get('nDpiX').get('node').get_value(), 
+                calc_result = Image2Print.calculate_printimage(dpix = stCalculatePrintImage.get('stIn').get('nDpiX').get('node').get_value(), 
                                                  dpiy = stCalculatePrintImage.get('stIn').get('nDpiY').get('node').get_value(),
                                                  dimx = stCalculatePrintImage.get('stIn').get('rDimX').get('node').get_value(), 
                                                  dimy = stCalculatePrintImage.get('stIn').get('rDimY').get('node').get_value(), 
@@ -153,24 +173,31 @@ if __name__ == "__main__":
                                                  rot = stCalculatePrintImage.get('stIn').get('rRot').get('node').get_value(), 
                                                  offsetx = stCalculatePrintImage.get('stIn').get('rOffsetX').get('node').get_value(), 
                                                  offsety = stCalculatePrintImage.get('stIn').get('rOffsetY').get('node').get_value(), 
-                                                 #shrink = stCalculatePrintImage.get('stIn').get('nDpiX').get('node').get_value(), 
+                                                 shrink = stCalculatePrintImage.get('stIn').get('xShrink').get('node').get_value(), 
                                                  bg = stCalculatePrintImage.get('stIn').get('arrBg').get('node').get_value())
+                #write results back to server
+                stCalculatePrintImage.get('stOut').get('xError').get('node').set_value(calc_result.get('xError'))
                 stCalculatePrintImage.get('xExecute').get('node').set_value(False)
 
-            #if (ExecuteGetImageProperties.get_value() is True):
-            #    Image2Print = ImageProcessing.Image2Print()
-            #    img_prop = Image2Print.get_image_prop(path=path.get_value(),
-            #                                            dpimax=dpimax.get_value())            
-            #    width_px.set_value(img_prop['width_px'])
-            #    height_px.set_value(img_prop['height_px'])
-            #    dpmmx.set_value(img_prop['dpmmx'])
-            #    dpmmy.set_value(img_prop['dpmmy'])
-            #    width_mm.set_value(img_prop['width_mm'])
-            #    height_mm.set_value(img_prop['height_mm'])
-            #    DPIx.set_value(img_prop['DPIx'])
-            #    DPIy.set_value(img_prop['DPIy'])
-            #    ExecuteGetImageProperties.set_value(False)
+            if (stGetImageProperties.get('xExecute').get('node').get_value() is True):
+                #int class
+                Image2Print = ImageProcessing.Image2Print()
 
+                #class method
+                img_prop = Image2Print.get_image_prop(path=stGetImageProperties.get('stIn').get('strPath').get('node').get_value(),
+                                                        dpimax= stGetImageProperties.get('stIn').get('nDpiMax').get('node').get_value())       
+
+                #write back to server                                                                                                     
+                stGetImageProperties.get('stOut').get('nWidth_px').get('node').set_value(img_prop['width_px'], ua.VariantType.Int32)
+                stGetImageProperties.get('stOut').get('nHeigth_px').get('node').set_value(img_prop['height_px'], ua.VariantType.Int32)
+                stGetImageProperties.get('stOut').get('rDpmmX').get('node').set_value(img_prop['dpmmx'], ua.VariantType.Float)
+                stGetImageProperties.get('stOut').get('rDpmmY').get('node').set_value(img_prop['dpmmy'], ua.VariantType.Float)
+                stGetImageProperties.get('stOut').get('rWidth_mm').get('node').set_value(img_prop['width_mm'], ua.VariantType.Float)
+                stGetImageProperties.get('stOut').get('rHeigth_mm').get('node').set_value(img_prop['height_mm'], ua.VariantType.Float)
+                stGetImageProperties.get('stOut').get('nDpiX').get('node').set_value(img_prop['DPIx'], ua.VariantType.Int16)
+                stGetImageProperties.get('stOut').get('nDpiY').get('node').set_value(img_prop['DPIy'], ua.VariantType.Int16)
+                stGetImageProperties.get('stOut').get('xError').get('node').set_value(img_prop['xError'], ua.VariantType.Boolean)
+                stGetImageProperties.get('xExecute').get('node').set_value(False)
     except:
          pass
     finally:
