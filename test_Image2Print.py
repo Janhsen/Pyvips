@@ -259,6 +259,43 @@ class Image2Print(unittest.TestCase):
                                             shrink = False, 
                                             bg =  [255, 255, 255]
         )  
+    def test13_calculate_printimage(self):
+        #Test SVG Corel
+        Image2Print = ImageProcessing.Image2Print()
+        Image2Print.calculate_printimage(
+                                            dpix = 1 , 
+                                            dpiy = 1, 
+                                            dimx = 1, 
+                                            dimy = 1, 
+                                            path_in = "",
+                                            path_out = "",
+                                            sizex = 1, 
+                                            sizey = 1, 
+                                            rot = 0, 
+                                            offsetx = 0,
+                                            offsety = 0, 
+                                            shrink = False, 
+                                            bg =  [255, 255, 255]
+        )  
+
+    def test14_calculate_printimage(self):
+    #Test SVG Corel
+        Image2Print = ImageProcessing.Image2Print()
+        Image2Print.calculate_printimage(
+                                            dpix = 0 , 
+                                            dpiy = 0, 
+                                            dimx = 0, 
+                                            dimy = 0, 
+                                            path_in = "",
+                                            path_out = "",
+                                            sizex = 0, 
+                                            sizey = 0, 
+                                            rot = 0, 
+                                            offsetx = 0,
+                                            offsety = 0, 
+                                            shrink = False, 
+                                            bg =  [0,0 ,0 ]
+        )  
 
 if __name__ == '__main__':
     unittest.main()

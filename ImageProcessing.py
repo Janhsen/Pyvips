@@ -151,7 +151,12 @@ class Image2Print:
             if (self.img.width + self.offsetx_px) < self.printbedx_px :
                 self.printbedx_px = (self.img.width + self.offsetx_px)
             if (self.img.height + self.offsety_px) < self.printbedy_px :
-                self.printbedy_px = (self.img.height + self.offsety_px)  
+                self.printbedy_px = (self.img.height + self.offsety_px) 
+
+        if self.printbedx_px < 1:
+            self.printbedx_px = 1 *(ureg.count)
+        if self.printbedy_px < 1:
+            self.printbedy_px = 1  *(ureg.count)
 
         print ('Create printbed bounding') 
         self.printbed = pyvips.Image.black(self.printbedx_px, self.printbedy_px)
@@ -159,8 +164,11 @@ class Image2Print:
         if self.bg == [255,255,255]:
             self.printbed = self.printbed.colourspace('b-w')
 
-        print ('Merge images with pixel offset X=', self.offsetx_px,'and Y=', self.offsety_px)
+        print ('Merge images with pixel offset X=', self.offsetx_px,'and Y=', self.offsety_px.magnitude)
+ 
         self.offsety_px = self.printbedy_px - self.img.height - self.offsety_px.magnitude
+        if (self.img.height+self.offsety_px) < 0:
+            self.offsety_px = 1* (ureg.count)
         self.printbed = self.printbed.insert(self.img, self.offsetx_px.magnitude, self.offsety_px.magnitude)
         
         print ('Convert to B&W') 
@@ -178,8 +186,8 @@ class Image2Print:
         self.img_dpmmy = self.img.yres
         self.img_width_mm = self.img.width/self.img.xres
         self.img_height_mm = self.img.height/self.img.yres
-        self.img_dpix = self.img.xres/(1/25.40)
-        self.img_dpiy = self.img.yres/(1/25.40)
+        self.img_dpix = int(self.img.xres/(1/25.40)) 
+        self.img_dpiy = int(self.img.yres/(1/25.40)) 
         self.img_prop = {
                         'width_px' : self.img_width_px,
                         'height_px' : self.img_height_px,
@@ -272,19 +280,22 @@ class Image2Print:
                 shrink (bool, optional): [Shrink the printing image to smallest size Y | N]. Defaults to True.
                 bg (list, optional): [Background colour -> Fraunhofer RGB [23,156,125]']. Defaults to [255,255,255].
         """  
-        self.__set_printsettings(dpix, dpiy, dimx, dimy, sizex , sizey , rot, offsetx , offsety, shrink, bg)
-        self.__set_imagepath(path_in)
-        self.__set_savepath(path_out)
-        self.__calc_factors()
-        if self.path_in.endswith('.svg'):
-            self.__load_svg()
-        elif self.path_in.endswith('.tif') or self.path_in.endswith('.tiff') or self.path_in.endswith('.png') or self.path_in.endswith('.bmp') :
-            self.__load_bitmap()
+        if dpix > 0 and dpiy > 0 and dimx > 0 and dimy > 0 and sizex > 0 and sizey > 0:
+            self.__set_printsettings(dpix, dpiy, dimx, dimy, sizex , sizey , rot, offsetx , offsety, shrink, bg)
+            self.__set_imagepath(path_in)
+            self.__set_savepath(path_out)
+            self.__calc_factors()
+            if self.path_in.endswith('.svg'):
+                self.__load_svg()
+            elif self.path_in.endswith('.tif') or self.path_in.endswith('.tiff') or self.path_in.endswith('.png') or self.path_in.endswith('.bmp') :
+                self.__load_bitmap()
+            else:
+                return ( {'xError' : True })
+            img_prop = self.__get_image_prop()
+            self.__calc_image()
+            return ({'xError' : False })
         else:
-            return
-        img_prop = self.__get_image_prop()
-        self.__calc_image()
-        return (img_prop)
+            return ( {'xError' : True })
 
     def get_image_prop(self, path : str, dpimax: int = 100 ):
         """Get image properties of a given image
@@ -296,11 +307,27 @@ class Image2Print:
             img_prop: [{width_px, height_px, dpmmx, dpmmy, width_mm, height_mm, DPIx, DPIy}]
         """    
         self.dpimax = dpimax
-        self.__set_imagepath(path)
-        if self.path_in.endswith('.svg'):
-            self.__load_svg_simple()
-        elif self.path_in.endswith('.tif') or self.path_in.endswith('.tiff') or self.path_in.endswith('.png') or self.path_in.endswith('.bmp') :
-            self.__load_bitmap_simple()
+        result = self.__set_imagepath(path)
+
+        if result is True:
+            if self.path_in.endswith('.svg'):
+                self.__load_svg_simple()
+            elif self.path_in.endswith('.tif') or self.path_in.endswith('.tiff') or self.path_in.endswith('.png') or self.path_in.endswith('.bmp') :
+                self.__load_bitmap_simple()
+            else:
+                return
+            result = self.__get_image_prop() 
+            result['xError'] = False
+            return (result)
         else:
-            return
-        return self.__get_image_prop()
+             return ( {
+                        'width_px' : 0,
+                        'height_px' : 0,
+                        'dpmmx' : 0,
+                        'dpmmy' : 0,
+                        'width_mm' : 0,
+                        'height_mm' : 0,
+                        'DPIx' : 0,
+                        'DPIy' : 0,
+                        'xError' : True
+                     })
