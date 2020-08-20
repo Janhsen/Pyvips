@@ -108,10 +108,8 @@ class Image2Print:
             self.scalex = round((self.img.xres / self.dpmmmax.magnitude),7)
             self.scaley = round((self.img.yres / self.dpmmmax.magnitude),7)
             print ('\nResize org. image x:', 1/self.scalex, 'y:', 1/self.scaley)
-            if self.scalex >= self.scaley :
-                self.img = self.img.resize((1/self.scalex), vscale=(1/(self.scaley)))
-            else:
-                self.img = self.img.resize((1/self.scalex), vscale=(self.scaley))
+            self.img = self.img.resize((1/self.scalex), vscale=(1/(self.scaley)))
+            
             self.buffer = self.img.tiffsave_buffer(xres = self.dpmmx.magnitude, yres = self.dpmmy.magnitude)
             self.img = pyvips.Image.tiffload_buffer(self.buffer)
             return True
