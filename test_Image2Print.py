@@ -260,5 +260,25 @@ class Image2Print(unittest.TestCase):
                                             bg =  [255, 255, 255]
         )  
 
+    def test13_calculate_printimage(self):
+        #Test SVG Corel
+        Image2Print = ImageProcessing.Image2Print()
+        Image2Print.calculate_printimage(
+                                            dpix = 63, 
+                                            dpiy = 63, 
+                                            dimx = 300, 
+                                            dimy = 300, 
+                                            path_in = "./data/result6.tiff",
+                                            path_out = "./data/result13.tiff",
+                                            sizex = 1, 
+                                            sizey = 1, 
+                                            rot = 0, 
+                                            offsetx = 0,
+                                            offsety = 0, 
+                                            shrink = True, 
+                                            bg =  [255, 255, 255]
+        )  
+
+
 if __name__ == '__main__':
     unittest.main()
