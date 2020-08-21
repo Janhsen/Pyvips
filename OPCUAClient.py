@@ -7,39 +7,39 @@ import ImageProcessing
 sys.path.insert(0, "..")
 
 #Node Defs
-xHeartbeat = {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.xHeartbeat'}
+xHeartbeat = {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.xHeartbeat'}
 
-stCalculatePrintImage = {'xExecute': {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.xExecute'},
-                        'stIn': {   'arrBg'     : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.arrBg'},
-                                    'nDpiX'     : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.nDpiX'},
-                                    'nDpiY'     : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.nDpiY'},
-                                    'rDimX'     : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rDimX'},
-                                    'rDimY'     : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rDimY'},
-                                    'rOffsetX'  : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rOffsetX'},
-                                    'rOffsetY'  : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rOffsetY'},
-                                    'rRot'      : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rRot'},
-                                    'rSizeX'    : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rSizeX'},
-                                    'rSizeY'    : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rSizeY'},
-                                    'sPathIn'   : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.sPathIn'},
-                                    'sPathOut'  : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.sPathOut'},
-                                    'xShrink'   : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.xShrink'}
+stCalculatePrintImage = {'xExecute': {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.xExecute'},
+                        'stIn': {   'arrBg'     : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.arrBg'},
+                                    'nDpiX'     : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.nDpiX'},
+                                    'nDpiY'     : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.nDpiY'},
+                                    'rDimX'     : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rDimX'},
+                                    'rDimY'     : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rDimY'},
+                                    'rOffsetX'  : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rOffsetX'},
+                                    'rOffsetY'  : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rOffsetY'},
+                                    'rRot'      : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rRot'},
+                                    'rSizeX'    : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rSizeX'},
+                                    'rSizeY'    : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.rSizeY'},
+                                    'sPathIn'   : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.sPathIn'},
+                                    'sPathOut'  : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.sPathOut'},
+                                    'xShrink'   : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stIn.xShrink'}
                                 },
-                        'stOut': {  'xError'    : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stOut.xError'}}                                   
+                        'stOut': {  'xError'    : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stCalculatePrintImage.stOut.xError'}}                                   
                         }
 
-stGetImageProperties = {'xExecute': {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.xExecute'},
-                        'stIn': {   'nDpiMax'       : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stIn.nDpiMax'},
-                                    'strPath'       : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stIn.strPath'}
+stGetImageProperties = {'xExecute': {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stGetImageProperties.xExecute'},
+                        'stIn': {   'nDpiMax'       : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stGetImageProperties.stIn.nDpiMax'},
+                                    'strPath'       : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stGetImageProperties.stIn.strPath'}
                                 },
-                        'stOut': {  'nWidth_px'     : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.nWidth_px'},
-                                    'nHeigth_px'    : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.nHeight_px'},
-                                    'rWidth_mm'     : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.rWidth_mm'},
-                                    'rHeigth_mm'    : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.rHeight_mm'},
-                                    'rDpmmX'        : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.rDpmmX'},
-                                    'rDpmmY'        : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.rDpmmY'},
-                                    'nDpiX'         : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.nDpiX'},
-                                    'nDpiY'         : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.nDpiY'},
-                                    'xError'        : {'NodeID':'ns=4;s=|var|CODESYS Control RTE x64 .Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.xError'}
+                        'stOut': {  'nWidth_px'     : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.nWidth_px'},
+                                    'nHeigth_px'    : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.nHeight_px'},
+                                    'rWidth_mm'     : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.rWidth_mm'},
+                                    'rHeigth_mm'    : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.rHeight_mm'},
+                                    'rDpmmX'        : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.rDpmmX'},
+                                    'rDpmmY'        : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.rDpmmY'},
+                                    'nDpiX'         : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.nDpiX'},
+                                    'nDpiY'         : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.nDpiY'},
+                                    'xError'        : {'NodeID':'ns=4;s=|var|CODESYS Control Win V3.Application.Main.PLC.ImageProcessing.stGetImageProperties.stOut.xError'}
                                 }
                         }
 
@@ -159,7 +159,7 @@ if __name__ == "__main__":
 ##
         ## Main Loop
         while True:
-            time.sleep(0.05)  
+            time.sleep(0.1)  
             if (stCalculatePrintImage.get('xExecute').get('node').get_value() is True):
                 Image2Print = ImageProcessing.Image2Print()
                 calc_result = Image2Print.calculate_printimage(dpix = stCalculatePrintImage.get('stIn').get('nDpiX').get('node').get_value(), 

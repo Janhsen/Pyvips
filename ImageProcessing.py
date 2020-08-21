@@ -280,18 +280,21 @@ class Image2Print:
         """  
         if dpix > 0 and dpiy > 0 and dimx > 0 and dimy > 0 and sizex > 0 and sizey > 0:
             self.__set_printsettings(dpix, dpiy, dimx, dimy, sizex , sizey , rot, offsetx , offsety, shrink, bg)
-            self.__set_imagepath(path_in)
-            self.__set_savepath(path_out)
-            self.__calc_factors()
-            if self.path_in.endswith('.svg'):
-                self.__load_svg()
-            elif self.path_in.endswith('.tif') or self.path_in.endswith('.tiff') or self.path_in.endswith('.png') or self.path_in.endswith('.bmp') :
-                self.__load_bitmap()
+            result = self.__set_imagepath(path_in)
+            if result is True:
+                self.__set_savepath(path_out)
+                self.__calc_factors()
+                if self.path_in.endswith('.svg'):
+                    self.__load_svg()
+                elif self.path_in.endswith('.tif') or self.path_in.endswith('.tiff') or self.path_in.endswith('.png') or self.path_in.endswith('.bmp') :
+                    self.__load_bitmap()
+                else:
+                    return ( {'xError' : True })
+                img_prop = self.__get_image_prop()
+                self.__calc_image()
+                return ({'xError' : False })
             else:
                 return ( {'xError' : True })
-            img_prop = self.__get_image_prop()
-            self.__calc_image()
-            return ({'xError' : False })
         else:
             return ( {'xError' : True })
 
