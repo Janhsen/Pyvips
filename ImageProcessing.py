@@ -21,7 +21,11 @@ class Image2Print:
         if self.dpix > self.dpiy:                                           # Max DPI of the created image
            self.dpimax = self.dpix     
         else:
-            self.dpimax = self.dpiy                     
+            self.dpimax = self.dpiy
+        if self.sizex > self.sizey:                                         # Max size of the created image
+           self.sizemax = self.sizex     
+        else:
+            self.sizemax = self.sizey            
         self.dpmmmax = self.dpimax.to(ureg.count / ureg.mm)  
         
         self.dpmmx = self.dpix.to(ureg.count / ureg.mm)
@@ -66,7 +70,7 @@ class Image2Print:
         if self.path_in != '' :
                 """Load SVG"""
                 print ('\nLoad SVG:', self.path_in),
-                self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax.magnitude)
+                self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax.magnitude * self.sizemax)
                 self.img = self.img.colourspace('b-w')
                 self.img = self.img.invert()
                 self.img = self.img.extract_band(1)
@@ -87,7 +91,9 @@ class Image2Print:
         if self.path_in != '' :
                 """Load SVG"""
                 print ('\nLoad SVG:', self.path_in),
-                self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax)
+
+                
+                self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax )
                 return True
         else:
                 print ('\nNo image loaded')
@@ -239,7 +245,7 @@ class Image2Print:
         self.dimx = dimx * (ureg.mm)                               
         self.dimy = dimy * (ureg.mm)                      
         self.sizex = sizex                                              
-        self.sizey = sizey                                             
+        self.sizey = sizey       
         self.rot = rot                                               
         self.offsetx = offsetx * (ureg.mm)                               
         self.offsety = offsety * (ureg.mm)                                
