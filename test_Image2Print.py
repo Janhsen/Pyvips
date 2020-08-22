@@ -297,5 +297,14 @@ class Image2Print(unittest.TestCase):
                                             bg =  [0,0 ,0 ]
         )  
 
+    def test15_calculate_printimage(self):
+    #Test SVG Corel
+        Image2Print = ImageProcessing.Image2Print()
+        Image2Print.get_image_prop(
+                                            path = "./data/test_inkscape.svg" , 
+                                            dpimax = 100
+        )  
+
+
 if __name__ == '__main__':
     unittest.main()

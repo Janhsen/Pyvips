@@ -87,7 +87,7 @@ class Image2Print:
         if self.path_in != '' :
                 """Load SVG"""
                 print ('\nLoad SVG:', self.path_in),
-                self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax.magnitude)
+                self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax)
                 return True
         else:
                 print ('\nNo image loaded')
