@@ -142,6 +142,11 @@ class Image2Print:
         self.printbed = self.img.extract_band(0)
         self.scalex = round((self.img.xres/self.dpmmmax.magnitude),7)*self.sizex
         self.scaley = round((self.img.yres/self.dpmmmax.magnitude),7)*self.sizey
+
+        if self.path_in.endswith('.svg'):
+            self.scalex = self.scalex / self.sizemax
+            self.scaley = self.scaley / self.sizemax
+
         print ('Rescale image for DPIx and DPIy x:', self.scalex, 'y:',self.scaley)
  
         print('self.img.width', self.img.width)
