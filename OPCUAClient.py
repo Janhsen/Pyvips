@@ -1,4 +1,5 @@
 import sys
+import os
 from opcua import Client
 from opcua import ua
 import threading
@@ -48,14 +49,15 @@ def Heartbeat():
     while True:
         xHeartbeat.get('node').set_value(not(xHeartbeat.get('node').get_value()))
         time.sleep(1)
-        #print('xHeartbeat :', xHeartbeat.get('node').get_value())
+        print('xHeartbeat :', xHeartbeat.get('node').get_value())
        
 
 if __name__ == "__main__":
 
-
+    
     client = Client("opc.tcp://localhost:4840")
     try:
+        
         client.connect()
 
         ### Register / Get Nodes
@@ -198,7 +200,9 @@ if __name__ == "__main__":
                 stGetImageProperties.get('stOut').get('nDpiY').get('node').set_value(img_prop['DPIy'], ua.VariantType.Int16)
                 stGetImageProperties.get('stOut').get('xError').get('node').set_value(img_prop['xError'], ua.VariantType.Boolean)
                 stGetImageProperties.get('xExecute').get('node').set_value(False)
-    except:
-         pass
+    except Exception:
+        pass
     finally:
-        client.disconnect()
+        os._exit(1)
+        #client.disconnect()
+    
