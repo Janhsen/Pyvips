@@ -3,7 +3,6 @@ vipshome = 'C:\\Program Files\\vips\\bin'
 os.environ['PATH'] = vipshome + ';' + os.environ['PATH']
 import pyvips
 import pint
-from PIL import Image
 
 ureg = pint.UnitRegistry()
 class Image2Print:
@@ -65,7 +64,6 @@ class Image2Print:
 
     def __load_svg(self):
         """Loads SVG with DPImax resoultion
-
         Returns:
             [BOOL]: [True if sucessfull | False if no SVG loaded]
         """        
@@ -86,7 +84,6 @@ class Image2Print:
 
     def __load_svg_simple(self):
         """Loads SVG with DPImax resoultion
-
         Returns:
             [BOOL]: [True if sucessfull | False if no SVG loaded]
         """        
@@ -104,7 +101,6 @@ class Image2Print:
 
     def __load_bitmap(self):
         """Loads Bitmaps *.tiff,*.tif,*.png, *.bmp with spec. DPImax resolution
-
         Returns:
             [BOOL]: [True if sucessfull | False if no bitmap loaded]
         """        
@@ -127,7 +123,6 @@ class Image2Print:
 
     def __load_bitmap_simple(self):
         """Loads Bitmaps *.tiff,*.tif,*.png, *.bmp with spec. DPImax resolution
-
         Returns:
             [BOOL]: [True if sucessfull | False if no bitmap loaded]
         """        
@@ -185,8 +180,7 @@ class Image2Print:
         print ('Convert to B&W') 
         #Create Printimage
         print ('Print image:', self.path_out,  '\n\nwidth_print:', self.printbed.width, '\nheight_print:', self.printbed.height, '\nDPIx_print:', self.dpmmx.magnitude/(1/25.40), '\nDPIy_print:', self.dpmmy.magnitude/(1/25.40)), 
-        self.printbed.tiffsave(self.path_out, squash = True, xres = self.dpmmx.magnitude, yres = self.dpmmy.magnitude, compression = 'deflate')
-        Image.open(self.path_out).Convert('1').Save(self.path_out_bmp)
+        self.printbed.tiffsave(self.path_out, squash = True, xres = self.dpmmx.magnitude, yres = self.dpmmy.magnitude)
         print ('\n####     Done     ####\n'), 
 
     def __get_image_prop(self): 
@@ -233,7 +227,6 @@ class Image2Print:
                             ):
            
         """Set all properties for the new calculated image
-
         Args:
             dpix (int): [DPI in x direction]
             dpiy (int): [DPI in y direction]
@@ -276,7 +269,6 @@ class Image2Print:
                         bg : list = [255,255,255] 
                         ):                                 
         """Calculates a 1bit printimage bg = [255,255,255] or a printimage with a give printbed (bg color)
-
             Args:
                 dpix (int): [DPI in x direction]
                 dpiy (int): [DPI in y direction]
@@ -314,7 +306,6 @@ class Image2Print:
 
     def get_image_prop(self, path : str, dpimax: int = 100 ):
         """Get image properties of a given image
-
         Args:
             path ([str]): [Image path (*.tiff,*.tif,*.png, *.bmp, *.svg)]]
             dpimax ([int]) : [If SVG]
