@@ -3,6 +3,7 @@ vipshome = 'C:\\Program Files\\vips\\bin'
 os.environ['PATH'] = vipshome + ';' + os.environ['PATH']
 import pyvips
 import pint
+from PIL import Image
 
 ureg = pint.UnitRegistry()
 class Image2Print:
@@ -51,6 +52,7 @@ class Image2Print:
         path = path.lower()
         if ((path.endswith('.tiff') or path.endswith('.tif'))): # and os.path.exists(path)
             self.path_out = path
+            self.path_out_bmp = os.path.splitext(path)[0]+'.bmp'
             print('\nSet save path: ', self.path_out)
             return True
         else:
@@ -184,6 +186,7 @@ class Image2Print:
         #Create Printimage
         print ('Print image:', self.path_out,  '\n\nwidth_print:', self.printbed.width, '\nheight_print:', self.printbed.height, '\nDPIx_print:', self.dpmmx.magnitude/(1/25.40), '\nDPIy_print:', self.dpmmy.magnitude/(1/25.40)), 
         self.printbed.tiffsave(self.path_out, squash = True, xres = self.dpmmx.magnitude, yres = self.dpmmy.magnitude, compression = 'deflate')
+        Image.open(self.path_out).Convert('1').Save(self.path_out_bmp)
         print ('\n####     Done     ####\n'), 
 
     def __get_image_prop(self): 
