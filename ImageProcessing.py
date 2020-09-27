@@ -51,7 +51,6 @@ class Image2Print:
         path = path.lower()
         if ((path.endswith('.tiff') or path.endswith('.tif'))): # and os.path.exists(path)
             self.path_out = path
-            self.path_out_bmp = os.path.splitext(path)[0]+'.bmp'
             print('\nSet save path: ', self.path_out)
             return True
         else:
@@ -91,7 +90,6 @@ class Image2Print:
                 """Load SVG"""
                 print ('\nLoad SVG:', self.path_in),
 
-                
                 self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax )
                 return True
         else:
