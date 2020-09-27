@@ -6,6 +6,7 @@ import pint
 
 ureg = pint.UnitRegistry()
 class Image2Print:
+    pyvips.cache_set_max(0)
 
     def __calc_factors(self):
         """Calculate image factors
@@ -66,10 +67,11 @@ class Image2Print:
         Returns:
             [BOOL]: [True if sucessfull | False if no SVG loaded]
         """        
+        
         if self.path_in != '' :
                 """Load SVG"""
                 print ('\nLoad SVG:', self.path_in),
-                self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax.magnitude * self.sizemax)
+                self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax.magnitude * self.sizemax, memory = False)
                 self.img = self.img.colourspace('b-w')
                 self.img = self.img.invert()
                 self.img = self.img.extract_band(1)
@@ -90,7 +92,7 @@ class Image2Print:
                 """Load SVG"""
                 print ('\nLoad SVG:', self.path_in),
 
-                self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax )
+                self.img = pyvips.Image.svgload(self.path_in, dpi = self.dpimax, memory = False )
                 return True
         else:
                 print ('\nNo image loaded')
@@ -103,7 +105,7 @@ class Image2Print:
             [BOOL]: [True if sucessfull | False if no bitmap loaded]
         """        
         if self.path_in != '' :
-            self.img = pyvips.Image.new_from_file(self.path_in)
+            self.img = pyvips.Image.new_from_file(self.path_in , memory = False)
             print ('\nLoad bitmap:', self.path_in),
             #self.img = pyvips.Image.new_from_file(self.path_in)
             print ('\nwidth:', self.img.width, '\nheight:', self.img.height, '\nDPIx:', round(self.img.xres/(1/25.40),3), '\nDPIy:', round(self.img.yres/(1/25.40),3)), 
@@ -125,7 +127,7 @@ class Image2Print:
             [BOOL]: [True if sucessfull | False if no bitmap loaded]
         """        
         if self.path_in != '' :
-            self.img = pyvips.Image.new_from_file(self.path_in)
+            self.img = pyvips.Image.new_from_file(self.path_in , memory = False)
             print ('\nLoad bitmap:', self.path_in)
             return True
         else:
